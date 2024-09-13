@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSV Table Display</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        h5 {
+            text-align: center;
+            position: sticky;
+            top: 0;
+            background-color: white;
+            z-index: 1000;
+            padding: 10px;
+            margin: 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 4px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            position: sticky;
+            top: 0;
+        }
+        .filter-bar {
+            position: fixed;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: lightblue;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        #filterInput {
+            width: 300px;
+        }
+    </style>
+
+    
+    <!-- Cloudflare Web Analytics -->
+    <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "4c0a6a67417444aa9f8f8b507aad5f96"}'></script>
+    <!-- End Cloudflare Web Analytics -->
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW62L5RT2K"></script>
+    
+</head>
+<body>
+
+<h5>临时邮箱、手机号------广告位招商</h5>
+<table id="csvTable">
+    <!-- Table content will be populated here -->
+</table>
+
+<div class="filter-bar">
+    <label for="filterInput"></label>
+    <input type="text" id="filterInput" placeholder="输入关键字筛选" onkeyup="filterTable()">
+</div>
+
+<script>
+// Function to read CSV file and populate table
+function loadCSV() {
+    fetch('./linshi.csv')
+        .then(response => response.text())
+        .then(data => {
+            const rows = data.split('\n');
+            const table = document.getElementById('csvTable');
+            let tableHTML = '';
+            rows.forEach((row, rowIndex) => {
+                const columns = row.split(',');
+                if (rowIndex === 0) {
+                    tableHTML += '<thead><tr>';
+                    columns.forEach(col => {
+                        tableHTML += `<th>${col.trim()}</th>`;
+                    });
+                    tableHTML += '</tr></thead><tbody>';
+                } else {
+                    tableHTML += '<tr>';
+                    columns.forEach(col => {
+                        // Check if the cell contains a URL and convert it to a hyperlink
+                        const cellContent = col.trim();
+                        const urlPattern = /(https?:\/\/[^\s]+)/g;
+                        if (urlPattern.test(cellContent)) {
+                            tableHTML += `<td><a href="${cellContent}" target="_blank">${cellContent}</a></td>`;
+                        } else {
+                            tableHTML += `<td>${cellContent}</td>`;
+                        }
+                    });
+                    tableHTML += '</tr>';
+                }
+            });
+            tableHTML += '</tbody>';
+            table.innerHTML = tableHTML;
+        });
+}
+
+// Function to filter table rows based on input
+function filterTable() {
+    const filterValue = document.getElementById('filterInput').value.toLowerCase();
+    const rows = document.querySelectorAll('#csvTable tbody tr');
+    rows.forEach(row => {
+        const cells = row.querySelectorAll('td');
+        let rowContainsFilter = false;
+        cells.forEach(cell => {
+            if (cell.textContent.toLowerCase().includes(filterValue)) {
+                rowContainsFilter = true;
+            }
+        });
+        row.style.display = rowContainsFilter ? '' : 'none';
+    });
+}
+
+// Load CSV data on page load
+window.onload = loadCSV;
+</script>
+
+</body>
+</html>

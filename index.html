@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>页面切换示例</title>
+    <style>
+        body {
+            margin: 0;
+            padding-bottom: 40px; /* 确保内容不会被表格覆盖 */
+             overflow-x: hidden; /* 禁用横向滚动 */
+        }
+
+
+        #content {
+            padding: 20px;
+            min-height: calc(100vh - 50px); /* 让内容区域不会覆盖表格 */
+        }
+
+        iframe {
+            position: fixed; /* 固定定位 */
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              border: none; /* 去除边框 */
+              overflow: hidden; /* 隐藏滚动条 */
+        }
+
+        table {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);/*  #f0f0f0*/
+            border-top: 1px solid #ccc;
+
+            text-align: center;
+            padding: 0px 0; /* 调整表格的高度 */
+            width: auto; /* 自动根据列内容调整宽度 */
+            margin: 0 auto;
+        }
+
+        td {
+            padding: 5px 10px; /* 调整单元格内边距，控制表格高度 */
+            cursor: pointer;
+            white-space: nowrap; /* 防止字段内容过长导致列变宽 */
+            /* border: 1px solid white; 1像素黑色实线边框 */
+            border-right: 1px solid #ccc;
+            color: white;
+        }
+
+        td:hover {
+            /*background-color: black;*/
+            transform: translateY(-5px); /* 向上平移5像素 */
+            transition: transform 0.3s ease-in-out; /* 添加过渡效果 */
+        }
+
+        td:last-child {
+            border-right: none;
+        }
+
+         /* CSS for the "Site Notice" icon */
+        #site-notice {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: sandybrown; /* #007BFFIcon background color */
+            color: white;
+            padding: 10px;
+            border-radius: 50%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        #site-notice:hover {
+            background-color: #0056b3; /* Color when hovering */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        #notice-text {
+            display: none;
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            background-color: white;
+            color: black;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            max-width: 300px;
+            font-size: 14px;
+        }
+    </style>
+    
+    <!-- Cloudflare Web Analytics -->
+    <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "4c0a6a67417444aa9f8f8b507aad5f96"}'></script>
+    <!-- End Cloudflare Web Analytics -->
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW62L5RT2K"></script>
+</head>
+<body>
+
+<div id="content">
+    <!-- 显示对应HTML文件内容的区域 -->
+    <iframe id="iframe" src="index2.html"></iframe>
+</div>
+
+<table>
+    <tr>
+        <td onclick="loadPage('index2.html')">网络地图</td>
+        <td onclick="loadPage('download.html')">软件下载</td>
+        <td onclick="loadPage('linshi.html')">临时</td>
+        <td onclick="loadPage('zanzhu.html')">赞助</td>
+        <td ></td>
+    </tr>
+</table>
+<div id="site-notice" onclick="toggleNotice()">本站声明</div>
+<div id="notice-text">本网站所提供的信息仅供参考，不构成任何形式的建议。本网站所包含的链接可能指向第三方网站，本网站不对这些网站的内容或其造成的任何损害负责。用户对本网站的使用应遵守法律法规，并承担一切风险,对于因用户行为导致的法律纠纷，本网站不承担任何责任。本网站保留随时修改或更新本免责声明的权利，用户应定期查阅本页面以了解最新版本。</div>
+
+<script>
+    function loadPage(page) {
+        document.getElementById('iframe').src = page;
+    }
+
+     function toggleNotice() {
+        var noticeText = document.getElementById('notice-text');
+        if (noticeText.style.display === 'none' || noticeText.style.display === '') {
+            noticeText.style.display = 'block';
+        } else {
+            noticeText.style.display = 'none';
+        }
+    }
+</script>
+
+</body>
+</html>
