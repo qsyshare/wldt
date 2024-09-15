@@ -146,6 +146,28 @@
             max-width: 300px;
             font-size: 14px;
         }
+        /* 手机版 */    
+        #mobile-button {
+        position: fixed;
+        bottom: 5px;
+        left: 20px;
+        background-color: #007BFF; /* 按钮背景颜色 */
+        color: white;
+        padding: 10px;
+        border-radius: 50%;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        cursor: pointer;
+        text-align: center;
+        font-size: 14px;
+        font-weight: bold;
+        display: none; /* 默认隐藏 */
+        z-index: 1000;
+    }
+
+    #mobile-button:hover {
+        background-color: #0056b3; /* Hover时颜色 */
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+    }
     </style>
     
    
@@ -157,6 +179,9 @@
     <!-- 显示对应HTML文件内容的区域 -->
     <iframe id="iframe" src="wangluoditu.html"></iframe>
 </div>
+
+<!-- 手机版 -->
+<div id="mobile-button" onclick="redirectToMobile()">手机版</div>
 
 <table>
     <tr>
@@ -188,6 +213,21 @@
             noticeText.style.display = 'none';
         }
     }
+<!-- 手机版 -->
+    function detectMobile() {
+        var isMobile = /Mobi|Android/i.test(navigator.userAgent);
+        if (isMobile) {
+            document.getElementById('mobile-button').style.display = 'block';
+        }
+    }
+
+    function redirectToMobile() {
+        window.location.href = './old/old.html';
+    }
+
+    window.onload = function() {
+        detectMobile();
+    };
 </script>
 
 </body>
