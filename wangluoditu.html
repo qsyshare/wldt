@@ -18,24 +18,19 @@
             z-index: 1000;
             padding: 10px;
             margin: 0;
+
+
         }
-        #searchInput, #filterSelect {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 5px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            position: sticky;
-            top: 50px;
-            background-color: white;
-            z-index: 1000;
+        h5 img {
+            height: 40px; /* 设置图片高度 */
+            margin-left: 10px; /* 与标题间距 */
+            float: right; /* 将图片浮动到右侧 */
         }
+        
         #filterSelect {
-            width: 160px;
-            margin-top: -10px;
+    
             top: 100px;
-            background-color: navajowhite;
+            background-color:azure ;/* navajowhite */
         }
         table {
             width: 100%;
@@ -44,6 +39,7 @@
             border-collapse: collapse;
             margin-top: 20px;
         }
+     
         table, th, td {
             border: 1px solid #ccc;
         }
@@ -55,8 +51,8 @@
         th {
             background-color: #f4f4f4;
             position: sticky;
-            top: 150px;
-            z-index: 500;
+            top: 37px;
+            z-index: 2;
         }
         /* 特定为 NO. 列设置的宽度 */
         th.no-column, td.no-column {
@@ -87,6 +83,31 @@
             text-decoration: none;
             color: blue;
         }
+
+         .filter-bar {
+            position: fixed;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: revert-layer;/* #0077cc*/
+            padding: 12px;
+            border-radius: 30px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .filter-bar input {
+            padding: 8px;
+            border: none;
+            border-radius: 20px;
+            width: 300px;
+            font-size: 14px;
+        }
+
+        .filter-bar input:focus {
+            outline: none;
+            box-shadow: 0 0 8px rgba(0, 0, 255, 0.3);
+        }
+
     </style>
 
     <!-- Cloudflare Web Analytics -->
@@ -106,17 +127,23 @@
 </head>
 <body>
 
-    <h5>网络地图------广告位招商</h5>
+    <h5>网络地图------广告位招商
+        <a href="https://wldt.qsyshare.com">
+            <img src="./images/logo.png" alt="Logo">
+        </a>
+    </h5>
 
-    <!-- 搜索框 -->
-    <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="输入关键词进行筛选...">
+    <div class="filter-bar">
+        <!-- 搜索框 -->
+        <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="输入关键词进行筛选...">
 
-    <!-- 选择框 -->
-    <select id="filterSelect" onchange="filterTable()">
-        <option value="all">全部列</option>
-        <option value="tags">标签列</option>
-        <option value="domestic">国内访问Y/N列</option>
-    </select>
+        <!-- 选择框 -->
+        <select id="filterSelect" onchange="filterTable()">
+            <option value="all">全部列</option>
+            <option value="tags">标签列</option>
+            <option value="domestic">国内访问Y/N列</option>
+        </select>
+    </div>
 
     <!-- 表格 -->
     <table id="dataTable">
