@@ -1,4 +1,4 @@
-﻿No.,名称,介绍,下载地址,,终端,分类,加入日期,备注
+No.,名称,介绍,下载地址,,终端,分类,加入日期,备注
 1,Watt Toolkit,游戏加速器,,https://github.com/BeyondDimension/SteamTools,Linux、Mac、Windows、UWP、 Android,,20240907,iOS待
 ,,,下载2,https://steampp.net/,,,,
 2,HandBrake,视频压缩,,https://github.com/HandBrake/HandBrake,Linux、Mac、Windows、Other,,,
@@ -11,14 +11,14 @@
 7,Clash for Windows,代理客户端,,https://github.com/lantongxue/clash_for_windows_pkg/releases,Linux、Mac、Windows,,,
 ,,,下载2,https://www.clashforwindows.net/clash-for-windows-download/,,,,
 8,ClashX,代理客户端,,https://en.clashx.org/download/,Mac,,,
-,,,,,,,,
-,,,,,,,,
-,,,,,,,,
-,,,,,,,,
-,,,,,,,,
-,,,,,,,,
-,,,,,,,,
-,,,,,,,,
+9,Stability AI,AI 图像生成平台,,https://github.com/Stability-AI/StableStudio,浏览器,,,
+10,Inpaint Anything,分割一切并修复图像,,https://github.com/geekyutao/Inpaint-Anything,windows、Mac,,,
+11,clone-voice,声音克隆工具,,https://github.com/jianchang512/clone-voice,Linux、Mac、Windows,,,
+,,,下载2,https://pyvideotrans.com/,,,,
+12,penpot,开源的 UI 设计与原型制作平台,,https://github.com/penpot/penpot,浏览器,,,
+,,,下载2,https://penpot.app/,,,,
+13,Mac批量重命名,自己开发的软件,,https://github.com/isoftware2024/isoftware2024.github.io,Mac,,20240920,
+14,Mac一键打开,自己开发的软件,,https://github.com/isoftware2024/isoftware2024.github.io,Mac,,,
 ,,,,,,,,
 ,,,,,,,,
 ,,,,,,,,
