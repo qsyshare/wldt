@@ -3,49 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>临时邮箱、手机号</title>
+    <title>开源软件下载</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color:white;/*-color: blanchedalmond #f4f7f6; */
+            color: #333;
+            
         }
+
         h5 {
-            text-align: center;
-            position: sticky;
-            top: 0;
-            background-color: white;
-            z-index: 1000;
+            display: flex;
+            justify-content: space-between; /* 标题和图片两端对齐 */
+            align-items: center; /* 垂直居中 */
+            background-color: blanchedalmond;
             padding: 10px;
             margin: 0;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;/* 0077cc */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+
+        h5 img {
+            height: 40px; /* 设置图片高度 */
+            margin-left: 10px; /* 与标题间距 */
+        }
+
+        .table-container {
+            width: 90%;
+            margin: 20px auto;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 10px;
         }
+
         th, td {
-            border: 1px solid #ddd;
-            padding: 4px;
+            padding: 12px 15px;
             text-align: left;
+            font-size: 14px;
+            border-bottom: 1px solid #ddd;
         }
+
         th {
-            background-color: #f2f2f2;
+            background: linear-gradient(90deg, #4facfe, #00f2fe);
+            color: white;
+            font-size: 16px;
+            text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+        }
+
+        thead th {
             position: sticky;
             top: 0;
+            background: linear-gradient(90deg, #4facfe, #00f2fe);
+            z-index: 2;
         }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #eaf6ff;
+        }
+
+        td a {
+            color: #0077cc;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        td a:hover {
+            text-decoration: underline;
+        }
+
         .filter-bar {
             position: fixed;
             bottom: 60px;
             left: 50%;
             transform: translateX(-50%);
-            background-color: lightblue;
-            padding: 10px;
-            border-radius: 5px;
+            background-color: revert-layer;/* #0077cc*/
+            padding: 12px;
+            border-radius: 30px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-        #filterInput {
+
+        .filter-bar input {
+            padding: 8px;
+            border: none;
+            border-radius: 20px;
             width: 300px;
+            font-size: 14px;
+        }
+
+        .filter-bar input:focus {
+            outline: none;
+            box-shadow: 0 0 8px rgba(0, 0, 255, 0.3);
         }
     </style>
-
     
     <!-- Cloudflare Web Analytics -->
     <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "4c0a6a67417444aa9f8f8b507aad5f96"}'></script>
@@ -60,17 +120,23 @@
 
       gtag('config', 'G-VW62L5RT2K');
     </script>
-        
+    
 </head>
 <body>
 
-<h5>临时邮箱、手机号------广告位招商</h5>
-<table id="csvTable">
-    <!-- Table content will be populated here -->
-</table>
+<h5>临时邮箱、电话号------广告位招租
+    <a href="https://wldt.qsyshare.com">
+    <img src="./images/logo.png" alt="Logo">
+</a>
+</h5>
+
+<div class="table-container">
+    <table id="csvTable">
+        <!-- Table content will be populated here -->
+    </table>
+</div>
 
 <div class="filter-bar">
-    <label for="filterInput"></label>
     <input type="text" id="filterInput" placeholder="输入关键字筛选" onkeyup="filterTable()">
 </div>
 
