@@ -7,40 +7,40 @@
     <style>
         body {
             font-family: 'Helvetica Neue', Arial, sans-serif;
-            background-color:white;/*-color: blanchedalmond #f4f7f6; */
+            background-color: white;
             color: #333;
-            
         }
 
         h5 {
             display: flex;
-            justify-content: space-between; /* 标题和图片两端对齐 */
-            align-items: center; /* 垂直居中 */
+            justify-content: space-between;
+            align-items: center;
             background-color: blanchedalmond;
             padding: 10px;
             margin: 0;
             font-size: 24px;
             font-weight: bold;
-            color: white;/* 0077cc */
+            color: white;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         h5 img {
-            height: 40px; /* 设置图片高度 */
-            margin-left: 10px; /* 与标题间距 */
+            height: 40px;
+            margin-left: 10px;
         }
 
         .table-container {
-            width: 92%;
+            width: 100%;
             margin: 20px auto;
+            overflow-x: auto;
             background-color: #fff;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         table {
-            width: 100%;
             border-collapse: collapse;
+            min-width: 600px;
         }
 
         th, td {
@@ -48,6 +48,7 @@
             text-align: left;
             font-size: 14px;
             border-bottom: 1px solid #ddd;
+            white-space: nowrap;
         }
 
         th {
@@ -55,13 +56,6 @@
             color: white;
             font-size: 16px;
             text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
-        }
-
-        thead th {
-            position: sticky;
-            top: 0;
-            background: linear-gradient(90deg, #4facfe, #00f2fe);
-            z-index: 2;
         }
 
         tr:nth-child(even) {
@@ -87,7 +81,7 @@
             bottom: 60px;
             left: 50%;
             transform: translateX(-50%);
-            background-color: revert-layer;/* #0077cc*/
+            background-color: #0077cc;
             padding: 12px;
             border-radius: 30px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -105,22 +99,50 @@
             outline: none;
             box-shadow: 0 0 8px rgba(0, 0, 255, 0.3);
         }
+
+        /* 卡片样式 */
+        .popup-card {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 320px;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            z-index: 1000;
+            display: none; /* 默认隐藏 */
+        }
+
+        .popup-card .close-btn {
+            display: block;
+            text-align: right;
+            margin-bottom: 10px;
+            cursor: pointer;
+            font-size: 20px;
+            color: #333;
+        }
+
+        .popup-card .close-btn:hover {
+            color: red;
+        }
+
+        .popup-card .popup-content-item {
+            margin-bottom: 10px;
+            word-wrap: break-word;
+        }
+
+        .popup-card .popup-content-item a {
+            color: #0077cc;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .popup-card .popup-content-item a:hover {
+            text-decoration: underline;
+        }
     </style>
-    
-    <!-- Cloudflare Web Analytics -->
-    <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "4c0a6a67417444aa9f8f8b507aad5f96"}'></script>
-    <!-- End Cloudflare Web Analytics -->
-
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW62L5RT2K"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-VW62L5RT2K');
-    </script>
-    
 </head>
 <body>
 
@@ -138,6 +160,11 @@
 
 <div class="filter-bar">
     <input type="text" id="filterInput" placeholder="输入关键字筛选" onkeyup="filterTable()">
+</div>
+
+<div id="popupCard" class="popup-card">
+    <div class="close-btn" onclick="closePopup()">×</div>
+    <div id="popupContent"></div>
 </div>
 
 <script>
@@ -158,9 +185,8 @@ function loadCSV() {
                     });
                     tableHTML += '</tr></thead><tbody>';
                 } else {
-                    tableHTML += '<tr>';
+                    tableHTML += '<tr ondblclick="showPopup(this)">';
                     columns.forEach(col => {
-                        // Check if the cell contains a URL and convert it to a hyperlink
                         const cellContent = col.trim();
                         const urlPattern = /(https?:\/\/[^\s]+)/g;
                         if (urlPattern.test(cellContent)) {
@@ -192,6 +218,47 @@ function filterTable() {
         row.style.display = rowContainsFilter ? '' : 'none';
     });
 }
+
+// Function to show popup with row details, each on a new line and linkifying URLs
+function showPopup(row) {
+    const popup = document.getElementById('popupCard');
+    const popupContent = document.getElementById('popupContent');
+
+    // Close any existing popup
+    closePopup();
+
+    // Get the row's text and format it in a new line per field
+    let rowData = Array.from(row.cells).map(cell => {
+        let cellText = cell.textContent.trim();
+        const urlPattern = /(https?:\/\/[^\s]+)/g;
+
+        // If it's a URL, make it clickable
+        cellText = cellText.replace(urlPattern, (url) => {
+            return `<a href="${url}" target="_blank">${url}</a>`;
+        });
+
+        return `<div class="popup-content-item">${cellText}</div>`;
+    }).join('');
+
+    // Display formatted rowData in the popup
+    popupContent.innerHTML = rowData;
+    
+    // Show the popup
+    popup.style.display = 'block';
+}
+
+// Function to close popup
+function closePopup() {
+    const popup = document.getElementById('popupCard');
+    popup.style.display = 'none';
+}
+
+// Close the popup when clicking anywhere else in the table
+document.getElementById('csvTable').addEventListener('click', function(event) {
+    if (!event.target.closest('tr')) {
+        closePopup();
+    }
+});
 
 // Load CSV data on page load
 window.onload = loadCSV;
