@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,84 +7,160 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            padding: 20px;
-            margin: 0;
+            margin: 20px;
         }
-        h5 {
-            text-align: center;
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            position: sticky;
+            z-index: 3;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            white-space: nowrap;
             position: sticky;
             top: 0;
-            background-color: white;
-            z-index: 1000;
+            z-index: 1;
+            cursor: pointer;
+        }
+
+        td:nth-child(1), th:nth-child(1) {
+            position: sticky;
+            left: 0;
+            background-color: #f2f2f2;
+            z-index: 2;
+        }
+
+        td:nth-child(2), th:nth-child(2) {
+            position: sticky;
+            left: 44px;
+            background-color: #f2f2f2;
+            z-index: 2;
+        }
+
+        td:nth-child(3) {
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* 显示列数据的样式 */
+        .column-data {
+            display: none; /* 初始隐藏 */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(224, 247, 250, 0.9); /* 半透明背景 */
+            padding-top: 50px; /* 为按钮预留空间 */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            z-index: 9998; /* 确保在表格上方 */
+            overflow-y: auto; /* 允许上下滚动 */
+        }
+
+        /* 按钮容器，固定在顶部 */
+        .button-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #00796b;
             padding: 10px;
-            margin: 0;
-
-
+            display: flex;
+            justify-content: space-between;
+            z-index: 10000;
         }
-        h5 img {
-            height: 40px; /* 设置图片高度 */
-            margin-left: 10px; /* 与标题间距 */
-            float: right; /* 将图片浮动到右侧 */
+
+        .button-container .close, .button-container .scroll-btn {
+            cursor: pointer;
+            font-size: 16px;
+            padding: 8px 16px;
+            color: white;
+            background-color: #00796b;
+            border: none;
+            border-radius: 4px;
         }
-        
-        #filterSelect {
+
+        .button-container .close:hover, .button-container .scroll-btn:hover {
+            background-color: #004d40;
+        }
+
+        .column-data p {
+            margin: 5px 0;
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 4px;
+            background-color: #b2ebf2;
+        }
+
+        /* 美化卡片 */
+        .popup-card {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            border: 1px solid #ccc;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 9999;
+            width: 90%;
+            max-width: 400px;
+            overflow: auto;
+            border-radius: 8px;
+        }
+
+        .close {
+            cursor: pointer;
+            float: right;
+            font-size: 20px;
+        }
+
+        .link {
+            display: block;
+            background-color: #e0f7fa;
+            padding: 8px;
+            margin: 5px 0;
+            text-decoration: none;
+            color: #00796b;
+        }
+
+        .link:hover {
+            background-color: #b2ebf2;
+        }
+
+        @media (max-width: 600px) {
+            .popup-card {
+                width: 95%;
+                max-width: none;
+                padding: 15px;
+            }
+
+            .close {
+                font-size: 18px;
+            }
+        }
+
+           #filterSelect {
     
             top: 100px;
             background-color:azure ;/* navajowhite */
         }
-        table {
-            width: 100%;
-            max-width: 100vw; /* 表格最大宽度为视口宽度 */
-            table-layout: fixed; /* 固定列宽 */
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-     
-        table, th, td {
-            border: 1px solid #ccc;
-        }
-        th, td {
-            padding: 4px;
-            text-align: center;
-            word-wrap: break-word; /* 强制内容换行 */
-        }
-        th {
-            background-color: #f4f4f4;
-            position: sticky;
-            top: 37px;
-            z-index: 2;
-        }
-        /* 特定为 NO. 列设置的宽度 */
-        th.no-column, td.no-column {
-            width: 40px; /* 可以根据需要调整宽度 */
-        }
-          th.no-column1, td.no-column1 {
-            width: 100px; /* 可以根据需要调整宽度 */
-        }
-          th.no-column2, td.no-column2 {
-            
-        }
-          th.no-column3, td.no-column3 {
-           
-        }
-          th.no-column4, td.no-column4 {
-            width: 120px; /* 可以根据需要调整宽度 */
-        }
-          th.no-column5, td.no-column5 {
-            width: 80px; /* 可以根据需要调整宽度 */
-        }
-          th.no-column6, td.no-column6 {
-            width: 80px; /* 可以根据需要调整宽度 */
-        }
-       
 
-        .action-buttons a {
-            margin-right: 10px;
-            text-decoration: none;
-            color: blue;
-        }
-
-         .filter-bar {
+        .filter-bar {
             position: fixed;
             bottom: 60px;
             left: 50%;
@@ -109,29 +185,9 @@
         }
 
     </style>
-
-    <!-- Cloudflare Web Analytics -->
-    <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "4c0a6a67417444aa9f8f8b507aad5f96"}'></script>
-    <!-- End Cloudflare Web Analytics -->
-
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW62L5RT2K"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-VW62L5RT2K');
-    </script>
-    
 </head>
 <body>
 
-    <h5>网络地图------广告位招商
-        <a href="https://wldt.qsyshare.com">
-            <img src="./images/logo.png" alt="Logo">
-        </a>
-    </h5>
 
     <div class="filter-bar">
         <!-- 搜索框 -->
@@ -141,98 +197,244 @@
         <select id="filterSelect" onchange="filterTable()">
             <option value="all">全部列</option>
             <option value="tags">标签列</option>
-            <option value="domestic">国内访问Y/N列</option>
         </select>
     </div>
 
-    <!-- 表格 -->
+    <!-- 新增的div，放在表格前方，包含关闭、到顶、到底按钮 -->
+    <div id="columnData" class="column-data">
+        <div class="button-container">
+            <button class="close">&times; 关闭</button>
+            <button class="scroll-btn" id="scrollTop">到顶</button>
+            <button class="scroll-btn" id="scrollBottom">到底部</button>
+        </div>
+        <div id="columnDataContent" style="padding: 10px;"></div>
+    </div>
+
     <table id="dataTable">
         <thead>
-            <tr>
-                <th class="no-column">NO.</th> <!-- 为 NO. 列添加 class -->
-                <th class="no-column1">名称</th>
-                <th class="no-column2">网址</th>
-                <th class="no-column3">说明</th>
-                <th class="no-column4">标签</th>
-                <th class="no-column5">国内访问Y/N</th>
-                <th class="no-column6">记录日期</th>
-            </tr>
+            <tr id="tableHeader"></tr>
         </thead>
-        <tbody id="tableBody">
-            <!-- 数据将通过JavaScript加载 -->
-        </tbody>
+        <tbody id="tableBody"></tbody>
     </table>
 
-    <br>
-    <a href=""></a> <!-- 链接到管理页面 -->
+    <div id="popupCard" class="popup-card" style="display: none;">
+        <div class="popup-content">
+            <span class="close">&times;</span>
+            <div id="cardData"></div>
+        </div>
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <script>
-        // 从CSV文件加载数据
-        async function loadCSV() {
-            const response = await fetch('./wldt_cn1.csv');
-            const csvText = await response.text();
-            return new Promise((resolve, reject) => {
-                Papa.parse(csvText, {
+
+        // Fetch the CSV file directly
+        fetch('wldt_cn.csv')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.text();
+            })
+            .then(data => {
+                // Parse the CSV data
+                Papa.parse(data, {
                     header: true,
-                    skipEmptyLines: true,
-                    complete: results => resolve(results.data),
-                    error: err => reject(err)
+                    complete: function(results) {
+                        displayData(results.data);
+                    },
+                    error: function(error) {
+                        console.error('Error:', error);
+                    }
+                });
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+            });
+
+        function displayData(data) {
+            const tableHeader = document.getElementById('tableHeader');
+            const tableBody = document.getElementById('tableBody');
+            
+            // Clear existing content
+            tableHeader.innerHTML = '';
+            tableBody.innerHTML = '';
+
+            // Create table header
+            if (data.length > 0) {
+                const headers = Object.keys(data[0]);
+                headers.forEach((header, index) => {
+                    const th = document.createElement('th');
+                    th.textContent = header;
+                    th.dataset.columnIndex = index; // 添加列索引
+                    tableHeader.appendChild(th);
+                });
+            }
+
+            // Create table rows
+            data.forEach(row => {
+                const tr = document.createElement('tr');
+                Object.entries(row).forEach(([key, cellData]) => {
+                    const td = document.createElement('td');
+                    if (key === '网址') {
+                        const link = document.createElement('a');
+                        link.href = cellData;
+                        link.textContent = cellData;
+                        link.target = '_blank';
+                        td.appendChild(link);
+                    } else {
+                        td.textContent = cellData;
+                    }
+                    tr.appendChild(td);
+                });
+                tableBody.appendChild(tr);
+            });
+        }
+
+        // 处理表头点击事件
+        document.addEventListener("DOMContentLoaded", function () {
+            const table = document.getElementById("dataTable");
+            const popupCard = document.getElementById("popupCard");
+            const cardData = document.getElementById("cardData");
+            const closeButton = document.querySelector(".close");
+            const columnDataDiv = document.getElementById("columnData");
+            const columnDataContent = document.getElementById("columnDataContent");
+            const scrollTopButton = document.getElementById("scrollTop");
+            const scrollBottomButton = document.getElementById("scrollBottom");
+            const closePopupButton = popupCard.querySelector(".close");
+
+            // 双击单元格显示行数据
+            table.addEventListener("dblclick", function (event) {
+                const cell = event.target;
+                if (cell.tagName === "TD") {
+                    const row = cell.parentNode;
+                    const rowData = Array.from(row.cells)
+                        .filter((td, index) => index !== 2)
+                        .map(td => td.innerText)
+                        .join(", ");
+
+                    const url = row.cells[2].querySelector('a').href;
+
+             // 关闭之前的卡片
+                    popupCard.style.display = "none";
+                    cardData.innerHTML = '';
+
+                    cardData.innerText = rowData;
+                    const urlElement = document.createElement('a');
+                    urlElement.href = url;
+                    urlElement.textContent = url;
+                    urlElement.target = '_blank';
+                    urlElement.classList.add('link');
+                    cardData.appendChild(urlElement);
+
+                    popupCard.style.display = "block";
+                }
+            });
+
+            // 关闭卡片
+            closePopupButton.addEventListener("click", function () {
+                popupCard.style.display = "none";
+            });
+
+            // 点击表头单元格显示整列数据
+            tableHeader.addEventListener("click", function (event) {
+                const headerCell = event.target;
+                const columnIndex = headerCell.dataset.columnIndex;
+
+                const columnData = [...new Set(Array.from(tableBody.querySelectorAll(`tr td:nth-child(${Number(columnIndex) + 1})`))
+                .map(td => td.textContent))];
+
+                // 显示列数据，并为每个数据项添加 'filter-data' 类以便点击筛选
+                columnDataContent.innerHTML = columnData.map(data => `<p class="filter-data">${data}</p>`).join("");
+                columnDataDiv.style.display = "block"; // 显示新DIV
+                            
+                    // 添加点击事件，点击列数据进行筛选
+                const filterItems = document.querySelectorAll(".filter-data");
+                filterItems.forEach(item => {
+                    item.addEventListener("click", function () {
+                        const filterText = item.textContent;
+                        filterTableByColumn(columnIndex, filterText);
+                        columnDataDiv.style.display = "none"; // 筛选后隐藏新DIV
+                    });
+                });
+
+            });
+
+            // 关闭新DIV的功能
+            closeButton.addEventListener("click", function () {
+                columnDataDiv.style.display = "none"; // 隐藏新DIV
+            });
+
+            // 到顶按钮
+            scrollTopButton.addEventListener("click", function () {
+                columnDataDiv.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
                 });
             });
-        }
 
-        // 显示数据到表格，并自动添加NO.列
-        async function displayData(data) {
-            const tableBody = document.getElementById('tableBody');
-            tableBody.innerHTML = ""; // 清空表格
-
-            data.forEach((item, index) => {
-                const row = document.createElement('tr');
-
-                // 自动添加NO.列
-                row.innerHTML = `
-                    <td class="no-column">${index + 1}</td> <!-- NO.列有特定的class -->
-                    <td class="no-column1">${item.名称 || ''}</td>
-                    <td class="no-column2"><a href="${item.网址 || '#'}" target="_blank">${item.网址 || ''}</a></td>
-                    <td class="no-column3">${item.说明 || ''}</td>
-                    <td class="no-column4">${item.标签 || ''}</td>
-                    <td class="no-column5">${item["国内访问Y/N"] || ''}</td>
-                    <td class="no-column6">${item.记录日期 || ''}</td>
-                `;
-                tableBody.appendChild(row);
-            });
-        }
-
-        // 筛选表格函数
-        async function filterTable() {
-            const input = document.getElementById("searchInput");
-            const filter = input.value.toLowerCase();
-            const filterType = document.getElementById("filterSelect").value;
-            const data = await loadCSV();
-
-            let filteredData = data.filter(item => {
-                if (filterType === "all") {
-                    return Object.values(item).some(value =>
-                        String(value).toLowerCase().includes(filter)
-                    );
-                } else if (filterType === "tags") {
-                    return item.标签.toLowerCase().includes(filter);
-                } else if (filterType === "domestic") {
-                    return item["国内访问Y/N"].toLowerCase().includes(filter);
-                }
-                return false;
+            // 到底按钮
+            scrollBottomButton.addEventListener("click", function () {
+                columnDataDiv.scrollTo({
+                    top: columnDataDiv.scrollHeight,
+                    behavior: 'smooth'
+                });
             });
 
-            displayData(filteredData);
-        }
+            // 筛选表格函数
+            function filterTableByColumn(columnIndex, filterText) {
+                const rows = tableBody.querySelectorAll('tr');
+                rows.forEach(row => {
+                    const cell = row.cells[columnIndex];
+                    if (cell && cell.textContent === filterText) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            }
 
-        // 初始化页面
-        window.onload = async function() {
-            const data = await loadCSV();
-            displayData(data);
+
+        
+        });
+        
+async function filterTable() {
+  const searchInput = document.getElementById("searchInput");
+  const filterSelect = document.getElementById("filterSelect");
+  const searchText = searchInput.value.toLowerCase();
+  const selectedValue = filterSelect.value;
+
+  const rows = tableBody.querySelectorAll('tr');
+
+  // 默认显示所有行
+  rows.forEach(row => {
+    row.style.display = '';
+  });
+
+  // 忽略大小写，使用正则表达式进行更灵活的搜索
+  const regex = new RegExp(searchText, 'i');
+
+
+
+  rows.forEach(row => {
+    let displayRow = false;
+    if (selectedValue === "all") {
+      for (let i = 0; i < row.cells.length; i++) {
+        if (regex.test(row.cells[i].textContent)) {
+          displayRow = true;
+          break;
         }
+      }
+    } else {
+      const columnIndex = selectedValue === "tags" ? 1 : 2;
+      if (regex.test(row.cells[columnIndex].textContent)) {
+        displayRow = true;
+      }
+    }
+    row.style.display = displayRow ? '' : 'none';
+  });
+}
+    
+       
     </script>
-
 </body>
 </html>
