@@ -36,10 +36,7 @@
     <link rel="icon" href="./images/logo.ico" type="image/x-icon">
   
     
-</head>
-
-
-     <!-- Cloudflare Web Analytics -->
+      <!-- Cloudflare Web Analytics -->
     <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "4c0a6a67417444aa9f8f8b507aad5f96"}'></script>
     <!-- End Cloudflare Web Analytics -->
 
@@ -52,64 +49,157 @@
 
       gtag('config', 'G-VW62L5RT2K');
     </script>
+
+
     <title>网络地图 - 网站收藏导航, 开源软件下载, 网盘资源分享</title>
 
     <style>
+
+
+    /* 隐藏上下滚动条 */
+html, body {
+    overflow-x: hidden; /* 隐藏水平滚动条 */
+    overflow-y: auto; /* 隐藏垂直滚动条 */
+    height: 100%; /* 确保高度占满页面 */
+    margin: 0; /* 去掉默认的页面边距 */
+    padding: 0;
+    height: 100%;
+    width: 100%;
+}
+
+/* 针对 WebKit 浏览器的滚动条样式 */
+html::-webkit-scrollbar {
+    display: none; /* 隐藏滚动条 */
+}
+
+/* 针对 Firefox 浏览器的滚动条样式 */
+html {
+    scrollbar-width: none; /* 隐藏滚动条 */
+}
+
+/* 针对 IE 和 Edge 浏览器的滚动条样式 */
+html, body {
+    -ms-overflow-style: none; /* 隐藏滚动条 */
+}
+
+
         body {
             margin: 0;
             padding-bottom: 40px; /* 确保内容不会被表格覆盖 */
-             overflow-x: hidden; /* 禁用横向滚动 */
+            overflow-x: hidden; /* 禁用横向滚动 */
+            overflow: auto;
+            scrollbar-width: none; /* 针对 Firefox 浏览器 */
+            white-space: nowrap;
+        }
+
+        body::-webkit-scrollbar {
+            display: none; /* 针对 Webkit 浏览器（Chrome, Safari）隐藏滚动条 */
         }
 
 
-        #content {
-            padding: 20px;
-            min-height: calc(100vh - 50px); /* 让内容区域不会覆盖表格 */
+/* 导航栏样式 */
+    
+    #cool-navbar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 40px; /* 固定高度，确保一致的视觉效果 */
+        background: linear-gradient(90deg, #89f7fe, #66a6ff, #d4fc79, #96e6a1, #fbc2eb, #a18cd1);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 添加阴影效果 */
+        z-index: 1000;
+        display: flex;
+        justify-content: center; /* 居中对齐 */
+        align-items: center; /* 垂直居中对齐 */
+        overflow-x: auto; /* 允许左右滑动 */
+        overflow-y: hidden;
+        white-space: nowrap; /* 保持内容在一行 */
+    }
+
+    /* 针对 WebKit 浏览器隐藏滚动条 */
+    #cool-navbar::-webkit-scrollbar {
+        display: none;
+    }
+
+    #cool-navbar ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        display: flex; /* 使用 flex 布局 */
+        justify-content: flex-start; /* 左对齐，防止内容过多时被隐藏 */
+        align-items: center; /* 内容垂直居中 */
+    }
+
+    #cool-navbar li {
+        display: flex;
+        align-items: center;
+        padding: 10px 15px; /* 缩小左右间距 */
+        font-size: 16px;
+        color: white;
+        font-weight: bold;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.3s ease; /* 添加过渡效果 */
+        border-radius: 5px;
+    }
+
+    /* logo 图片的样式 */
+    .navbar-logo {
+        height: 40px;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+    }
+
+    /* 鼠标悬停时的效果 */
+    #cool-navbar li:hover {
+        background-color: rgba(255, 255, 255, 0.2); /* 轻微透明的白色背景 */
+        transform: scale(1.1); /* 放大效果 */
+    }
+
+    .navbar-logo:hover {
+        transform: rotate(360deg); /* 旋转效果 */
+    }
+
+    /* 手机版 logo 大小调整 */
+    @media screen and (max-width: 768px) {
+        .navbar-logo {
+            height: 30px; /* 调整 logo 高度以适应手机 */
         }
-
-        iframe {
-            position: fixed; /* 固定定位 */
-              top: 0;
-              left: 0;
-              width: 100%;
-              height: 100%;
-              border: none; /* 去除边框 */
-              overflow: hidden; /* 隐藏滚动条 */
+        
+        #cool-navbar li {
+            font-size: 14px; /* 调整导航项字体大小 */
+            padding: 8px 10px; /* 缩小导航项的间距 */
         }
+    }
 
-        table {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);/*  #f0f0f0*/
-            border-top: 1px solid #ccc;
+/*  */
+        /* iframe 的样式 */
+    #content {
+        display: flex;
+        justify-content: center; /* 居中 iframe */
+        align-items: center;     /* 垂直居中 iframe */
+        height: 100vh;           /* 占据整个屏幕的高度 */
+        width: 100vw;            /* 占据整个屏幕的宽度 */
+        overflow: hidden;        /* 隐藏 content 容器的任何溢出 */
+    }
 
-            text-align: center;
-            padding: 0px 0; /* 调整表格的高度 */
-            width: auto; /* 自动根据列内容调整宽度 */
-            margin: 0 auto;
+    #iframe {
+        width: 100%;
+        height: 100%; /* 让 iframe 占据父容器的全部空间 */
+        border: none;
+        box-sizing: border-box; /* 保持边框和内容的统一 */
+    }
+
+    /* 使 iframe 内容在手机上自适应 */
+    @media (max-width: 768px) {
+        #iframe {
+            width: 100vw; /* 小屏幕时确保 iframe 横向占满屏幕 */
+            height: 100vh; /* 纵向占满屏幕 */
         }
+    }
 
-        td {
-            padding: 5px 10px; /* 调整单元格内边距，控制表格高度 */
-            cursor: pointer;
-            white-space: nowrap; /* 防止字段内容过长导致列变宽 */
-            /* border: 1px solid white; 1像素黑色实线边框 */
-            border-right: 1px solid #ccc;
-            color: white;
-        }
 
-        td:hover {
-            /*background-color: black;*/
-            transform: translateY(-5px); /* 向上平移5像素 */
-            transition: transform 0.3s ease-in-out; /* 添加过渡效果 */
-        }
-
-        td:last-child {
-            border-right: none;
-        }
-
-         /* CSS for the "Site Notice" icon */
+ /* 站点公告 */    
         #site-notice {
             position: fixed;
             bottom: 60px;
@@ -124,54 +214,62 @@
             font-size: 14px;
             font-weight: bold;
             transition: background-color 0.3s ease, box-shadow 0.3s ease;
-        }
 
+        }
+ 
         #site-notice:hover {
             background-color: #0056b3; /* Color when hovering */
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
         }
-
+ 
         #notice-text {
-            display: none;
-            position: fixed;
-            bottom: 80px;
-            right: 20px;
-            background-color: white;
-            color: black;
-            padding: 15px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-            z-index: 1000;
-            max-width: 300px;
-            font-size: 14px;
-        }
-        
-        /* 手机版 */    
-        #mobile-button {
-        position: fixed;
-        bottom: 60px;
-        left: 20px;
-        background-color: #007BFF; /* 按钮背景颜色 */
-        color: white;
-        padding: 10px;
-        border-radius: 50%;
+        display: none; /* 确保使用块级元素 */
+        position: fixed; /* 固定位置 */
+        bottom: 80px; /* 距离底部的距离 */
+        right: 20px; /* 距离右侧的距离 */
+        background-color: rgba(255, 255, 255, 0.9); /* 半透明背景 */
+        color: black;
+        padding: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-        cursor: pointer;
-        text-align: center;
+        max-width: 300px; /* 最大宽度 */
         font-size: 14px;
-        font-weight: bold;
-        display: none; /* 默认隐藏 */
-        z-index: 1000;
+        z-index: 1000; /* 确保在其他内容之上 */
+        overflow-wrap: break-word; /* 自动换行 */
+        word-wrap: break-word; /* 确保长单词自动换行 */
+        white-space: normal; /* 允许正常的文本换行 */
     }
 
-    #mobile-button:hover {
-        background-color: #0056b3; /* Hover时颜色 */
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+    @media (max-width: 768px) {
+        #notice-text {
+            padding: 10px;     /* 小屏幕时减少内边距 */
+        }
     }
+  
+ /* 手机版 */    
+         #mobile-button {
+            position: fixed;
+            bottom: 60px;
+            left: 20px;
+            background-color: #007BFF; /* 按钮背景颜色 */
+            color: white;
+            padding: 10px;
+            border-radius: 50%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+            display: none; /* 默认隐藏 */
+            z-index: 1000;
+        }
+
+        #mobile-button:hover {
+            background-color: #0056b3; /* Hover时颜色 */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+        }
     </style>
-    
-   
     
 </head>
 <body>
@@ -184,28 +282,40 @@
 <!-- 手机版 -->
 <div id="mobile-button" onclick="redirectToMobile()">手机版</div>
 
-<table>
-    <tr>
-        <td onclick="window.location.href='logocss.html';" style="cursor: pointer;"><header>
-            <!-- 添加 Logo 图片 -->
-            <img src="./images/logo.png" alt="网络地图 Logo" style="height: 25px;">
-        </header></td>
-        <td onclick="loadPage('wangluoditu.html')">网络地图</td>
-        <td onclick="loadPage('download.html')">开源软件下载</td>
-        <td onclick="loadPage('wangpan.html')">网盘资源</td>
-        <td onclick="loadPage('linshi.html')">临时</td>
-        <td onclick="loadPage('zanzhu.html')">赞助</td>
-        <td ></td>
-    </tr>
-</table>
-<div id="site-notice" onclick="toggleNotice()">本站声明</div>
-<div id="notice-text">本网站所提供的信息仅供参考，不构成任何形式的建议。本网站所包含的链接可能指向第三方网站，本网站不对这些网站的内容或其造成的任何损害负责。用户对本网站的使用应遵守法律法规，并承担一切风险,对于因用户行为导致的法律纠纷，本网站不承担任何责任。本网站保留随时修改或更新本免责声明的权利，用户应定期查阅本页面以了解最新版本。</div>
+<!-- 炫酷的导航栏 -->
+<nav id="cool-navbar">
+    <ul>
+        <li onclick="window.location.href='logocss.html';">
+            <img src="./images/logo.png" alt="网络地图 Logo" class="navbar-logo">
+        </li>
+        <li onclick="loadPage('wangluoditu.html')">网络地图</li>
+        <li onclick="loadPage('download.html')">开源软件下载</li>
+        <li onclick="loadPage('wangpan.html')">网盘资源</li>
+        <li onclick="loadPage('linshi.html')">临时</li>
+        <li onclick="loadPage('zanzhu.html')">赞助我们</li>
+    </ul>
+</nav>
+
+<!-- 站点公告 -->
+<div id="site-notice" onclick="toggleNotice()">站点公告</div>
+<div id="notice-text">本网站所提供的信息仅供参考，不构成任何形式的建议。本网站所包含的链接可能指向第三方网站，本网站不对这些网站的内容或其造成的任何损害负责。用户对本网站的使用应遵守法律法规，并承担一切风险,对于因用户行为导致的法律纠纷，本网站不承担任何责任。本网站保留随时修改或更新本免责声明的权利，用户应定期查阅本页面以了解最新版本。<br><br>
+    <!-- 按钮：隐藏 "site-notice" 和 "notice-text" -->
+    <button onclick="hideNoticeAndText()">隐藏公告</button>
+</div>
 
 <script>
-    function loadPage(page) {
-        document.getElementById('iframe').src = page;
-    }
+     // 页面加载完成后15秒隐藏 "site-notice"
+    window.onload = function() {
+        setTimeout(function() {
+            document.getElementById("site-notice").style.display = "none";
+        }, 15000); // 15000 毫秒 = 15 秒
+    };
 
+
+     function loadPage(page) {
+            document.getElementById('iframe').src = page;
+    }
+    
      function toggleNotice() {
         var noticeText = document.getElementById('notice-text');
         if (noticeText.style.display === 'none' || noticeText.style.display === '') {
@@ -214,21 +324,14 @@
             noticeText.style.display = 'none';
         }
     }
-<!-- 手机版 -->
-    function detectMobile() {
-        var isMobile = /Mobi|Android/i.test(navigator.userAgent);
-        if (isMobile) {
-            document.getElementById('mobile-button').style.display = 'block';
-        }
+
+    // 隐藏 "site-notice" 和 "notice-text"
+    function hideNoticeAndText() {
+        document.getElementById('site-notice').style.display = 'none';
+        document.getElementById('notice-text').style.display = 'none';
     }
 
-    function redirectToMobile() {
-        window.location.href = './old/old.html';
-    }
 
-    window.onload = function() {
-        detectMobile();
-    };
 </script>
 
 </body>
