@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AES-256 加密解密</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <style>
+        body {
+            background-color: #1c1c1c;
+            color: #f1c40f;
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 3em;
+            text-shadow: 2px 2px 5px rgba(255, 0, 0, 0.7);
+        }
+
+        h2 {
+            font-size: 1.5em;
+            color: #e74c3c;
+            margin-bottom: 20px;
+        }
+
+        input[type="password"], button {
+            padding: 10px;
+            font-size: 1.2em;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            transition: background-color 0.3s;
+        }
+
+        input[type="password"]:focus, button:hover {
+            background-color: #34495e;
+            cursor: pointer;
+        }
+@keyframes colorChange {
+    0% {
+        color: #f1c40f;
+    }
+    25% {
+        color: #e67e22;
+    }
+    50% {
+        color: #3498db;
+    }
+    75% {
+        color: #9b59b6;
+    }
+    100% {
+        color: #f1c40f;
+    }
+}
+
+@keyframes zoomIn {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes slowRotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes fastRotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+#decryptOutput {
+    font-size: 2em;
+    display: none;
+    animation: zoomIn 2s ease forwards, 
+               colorChange 10s infinite ease-in-out,
+               slowRotate 10s linear forwards, 
+               fastRotate 2s linear infinite;
+    animation-delay: 0s, 0s, 0s, 10s; /* 缩放和颜色立即执行，快速旋转在10秒后开始 */
+}
+
+    </style>
+</head>
+<body>
+    <h1>成人资源</h1>
+    <h2>包括美国、日本等,还有狮子的、大马、可爱狗狗等</h2>
+    <pre>因少儿不易,所以需要密码才能查看,并且具有高智商的人才能破解下面的密码,任何AI都无法破解,:
+    
+小红说密码是: 8893,小黑说密码是8332,小蓝说密码是8032.
+小红和小黑和起来对了3个数
+小黑和小蓝和起来对了4个数
+我对他们说,你们说的前面还有一个1呢,后面的数字是从大到小排列的,没有重复的数字.</pre>
+    <h3>请输入正确的密码查看:</h3>
+    <input type="password" id="decryptKey" placeholder="输入解密密码"><br>
+    <button onclick="decrypt()">开门</button>
+    
+    <div id="decryptOutput"></div>
+    <h3 id="errorMsg" style="display: none;">“密码错误,小朋友不许偷看哦!!!”</h3>
+    <h3 id="successMsg" style="display: none;">恭喜您! --- 好东西就要分享!😊</h3>
+
+    <script>
+        function decrypt() {
+            const key = document.getElementById('decryptKey').value;
+            const encryptedText = "U2FsdGVkX18JWvUWyS621B1AWMivrDDChWsY2twTiyGJiyZ8eYx8gbYREFMPtqTdSWQ8LlbQR6DerBPcLIi2ZWTPMoVEbguIX2PJ37pjAWmYtp5F8kQgLwBxDyX8FmUzEDxpLyy3yzmW1PlrO0hitpshqctnKGx3IzTr2toBsj1r359ILVz0ITQQaa1CMieE+JdSDUAQVVEoeaPrV0UwzkKyelEFjgv6NG/OisNwiTMl4hLVfacr90srhXVhsi0RxlCfAM4C/VYItO4o99WRFuqD6BESXnFjNUEZRVBVZ0W7cx1PPlYwAEDL+gwlu0Bm";
+            
+            const output = document.getElementById('decryptOutput');
+            const errorMsg = document.getElementById('errorMsg');
+            const successMsg = document.getElementById('successMsg');
+
+            output.style.display = 'none';
+            successMsg.style.display = 'none';
+            errorMsg.style.display = 'none';
+
+            if (key.trim() === "" || /[a-zA-Z]/.test(key)) {
+                errorMsg.style.display = 'block'; // Show error if input is empty or contains letters
+                return;
+            }
+
+            const decrypted = CryptoJS.AES.decrypt(encryptedText, key);
+            const decryptedText = decrypted.toString(CryptoJS.enc.Utf8);
+            
+            if (decryptedText) {
+                output.innerText = decryptedText;
+                output.style.display = 'block';
+                successMsg.style.display = 'block';
+            } else {
+                errorMsg.style.display = 'block'; // Show error for incorrect password
+            }
+        }
+    </script>
+</body>
+</html>
