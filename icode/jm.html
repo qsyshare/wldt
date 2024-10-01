@@ -144,32 +144,34 @@
             document.getElementById('progress').style.display = 'none'; 
         }
 
-        function encrypt() {
-            const fileInput = document.getElementById('fileInput');
-            const key = document.getElementById('encryptKey').value;
-            const inputContent = document.getElementById('encryptInput').value;
-            document.getElementById('progress').style.display = 'block'; 
+       function encrypt() {
+    const fileInput = document.getElementById('fileInput');
+    const key = document.getElementById('encryptKey').value;
+    const inputContent = document.getElementById('encryptInput').value;
+    document.getElementById('progress').style.display = 'block'; 
 
-            if (fileInput.files.length > 0) {
-                const file = fileInput.files[0];
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const fileContent = e.target.result;
-    const base64Content = btoa(fileContent);  // 使用正确的 Base64 编码
-    const mimeType = file.type || 'text/plain';
-    const contentToEncrypt = JSON.stringify({ mimeType, base64Content });
-    encryptAndDisplay(contentToEncrypt, key);
-                };
-                reader.readAsBinaryString(file);
-            } else if (inputContent.trim() !== "") {
-               const base64Input = btoa(inputContent);
-                const contentToEncrypt = JSON.stringify({ mimeType: 'text/plain', base64Content: base64Input });
-                encryptAndDisplay(contentToEncrypt, key);
-            } else {
-                alert("请提供输入文本或上传文件！");
-                document.getElementById('progress').style.display = 'none'; 
-            }
-        }
+    if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const fileContent = e.target.result;
+            const base64Content = btoa(fileContent);  // 使用正确的 Base64 编码
+            const mimeType = file.type || 'text/plain';
+            const contentToEncrypt = JSON.stringify({ mimeType, base64Content });
+            encryptAndDisplay(contentToEncrypt, key);
+        };
+        reader.readAsBinaryString(file);
+    } else if (inputContent.trim() !== "") {
+        const utf8Content = new TextEncoder().encode(inputContent); // 编码为 UTF-8
+        const base64Input = btoa(String.fromCharCode.apply(null, utf8Content));  // 使用 Base64 编码
+        const contentToEncrypt = JSON.stringify({ mimeType: 'text/plain', base64Content: base64Input });
+        encryptAndDisplay(contentToEncrypt, key);
+    } else {
+        alert("请提供输入文本或上传文件！");
+        document.getElementById('progress').style.display = 'none'; 
+    }
+}
+
          // 复制文本到剪贴板的函数
     function copyToClipboard() {
         const output = document.getElementById('encryptOutput');
