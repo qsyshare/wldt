@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="qsy">
+  <meta name="source" content="wldt.qsyshare.com">
+    <title>加密文件</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <style>
+        body {
+           
+            background: linear-gradient(135deg, #e0eafc, #cfdef3);
+            margin: 0;
+            
+            color: #333;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        button {
+            background-color: #007aff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+           
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #005bb5;
+        }
+        #fileDisplayArea {
+            display: none;
+            margin-top: 20px;
+            text-align: center;
+        }
+        #progress {
+            display: none;
+            margin-top: 10px;
+            font-weight: bold;
+            color: #28a745;
+            text-align: center;
+        }
+        textarea {
+            width: 100%;
+            max-width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin: 10px 0;
+            font-size: 14px;
+            resize: none;
+        }
+        #inputSection, #fileSection {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            background: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        hr{
+            color: whitesmoke;
+        }
+    </style>
+</head>
+<body>
+    <h1>「 加密文件 」</h1>
+    <h2>选择方式:</h2>
+    <button onclick="selectInput()">使用输入文本</button>
+    <button onclick="selectFile()">或 使用上传文件</button>
+
+    <div id="inputSection">
+        <h2>请输入需要加密的文本:</h2>
+        <textarea id="encryptInput" placeholder="输入文本" rows="5"></textarea>
+    </div>
+
+    <div id="fileSection" style="display:none;">
+        <h2>请上传需要加密的文件</h2>
+        <input type="file" id="fileInput" accept="*/*"><br>
+    </div>
+
+    <input type="password" id="encryptKey" placeholder="输入加密密码" style="margin: 10px auto; display: block; width: 100%; max-width: 400px; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
+    <button onclick="encrypt()">加密</button>
+    
+    <h3>加密后的文本:</h3>
+    <textarea id="encryptOutput" rows="10" readonly></textarea>
+    <button onclick="copyToClipboard()">复制文本</button>
+    <button onclick="exportToFile()">或 导出为 .txt 文件</button>
+    <button onclick="sendEmail()">发送邮件</button>
+
+    <div id="progress">请稍等,正在加密中...</div><br><br>
+
+    <hr/>
+    <pre>
+        <h4>服务介绍:</h4>
+        1.你可以用此网页给文字、文本、文档(如PPT、PDF等)、图片、视频等任何文件进行加密.
+        2.可选择输入密码,或不输入密码.
+        3.加密后的文件会变成一串很长的字符.
+        4.你需要保留这串很长的字符,和记住自己设定的密码.(因为解密文件需要:加密后的文本和密码才能进行解密)
+        5.如需要解密可在“侧边栏”-”解密文件“中进行.
+        以上免费.
+
+        <h4>我们还提供个人服务:</h4>
+        1.将加密后的文本,发送到 <strong>iruinote@gmail.com</strong> 邮箱(请不要发送密码,密码请自己保留,或告知未来接收加密文件的人):
+            邮箱主题:加密文件
+            邮箱内容: (可选)1.**年**月**日将文体发送给 *** (或是留下未来收件人的联系方式)
+                    2.加密后的文本(可以是附件)
+        2.我们会按照你的要求把加密后的文本发送给对方.(可匿名,默认是以来件邮箱的名字.)
+        3.我们会教对方如何解密文件.(事先你已经告诉了对方密码,我们不会接收密码,也不会告诉对方密码.)
+
+        文件大小/时间/费用:(文件大小)10M以内10元人民币.超出10M后每M加1元.(时间)一年内免费,超出1年后从每年的第2个月收取100元存档费用.整体费用=文件大小费用+时间费用.
+        (可最后一起支付,也可由收件人支付.如中间想取消可不用支付任何费用).
+        先付款的优势:付款后,所有服务直至完成结束.
+        后付款的优势:中间想取消,将不用支付任何费用.
+
+        购买流程:先付款(发邮件时备注先付款,即收到付款邮件.)
+                后付款(我们会再最后与您联系是否付款,并完成.)
+
+        注:我们对加密的任何文件没有任何权利,以上禁止传送任何非法文件及不好的文件内容,一切后果全由文件提供者自己承担.
+
+    </pre>
+ <footer>&copy; 2024 文件加密工具 wldt.qsyshare.com</footer>
+    <script>
+        function selectInput() {
+            document.getElementById('inputSection').style.display = 'block';
+            document.getElementById('fileSection').style.display = 'none';
+            document.getElementById('encryptInput').value = ''; 
+            document.getElementById('encryptOutput').value = ''; 
+            document.getElementById('progress').style.display = 'none'; 
+        }
+
+        function selectFile() {
+            document.getElementById('inputSection').style.display = 'none';
+            document.getElementById('fileSection').style.display = 'block';
+            document.getElementById('fileInput').value = ''; 
+            document.getElementById('encryptOutput').value = ''; 
+            document.getElementById('progress').style.display = 'none'; 
+        }
+
+        function encrypt() {
+            const fileInput = document.getElementById('fileInput');
+            const key = document.getElementById('encryptKey').value;
+            const inputContent = document.getElementById('encryptInput').value;
+            document.getElementById('progress').style.display = 'block'; 
+
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const fileContent = e.target.result;
+    const base64Content = btoa(fileContent);  // 使用正确的 Base64 编码
+    const mimeType = file.type || 'text/plain';
+    const contentToEncrypt = JSON.stringify({ mimeType, base64Content });
+    encryptAndDisplay(contentToEncrypt, key);
+                };
+                reader.readAsBinaryString(file);
+            } else if (inputContent.trim() !== "") {
+               const base64Input = btoa(inputContent);
+                const contentToEncrypt = JSON.stringify({ mimeType: 'text/plain', base64Content: base64Input });
+                encryptAndDisplay(contentToEncrypt, key);
+            } else {
+                alert("请提供输入文本或上传文件！");
+                document.getElementById('progress').style.display = 'none'; 
+            }
+        }
+         // 复制文本到剪贴板的函数
+    function copyToClipboard() {
+        const output = document.getElementById('encryptOutput');
+        output.select();
+        document.execCommand('copy');
+        alert('文本已复制到剪贴板！');
+    }
+
+    // 导出文本为 .txt 文件的函数
+    function exportToFile() {
+        const output = document.getElementById('encryptOutput').value;
+        const blob = new Blob([output], { type: 'text/plain' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'encrypted_output.txt';
+        link.click();
+        URL.revokeObjectURL(link.href); // 释放内存
+    }
+
+    function sendEmail() {
+        const output = document.getElementById('encryptOutput').value;
+        const subject = encodeURIComponent('加密后的文本');
+        const body = encodeURIComponent(output);
+        const mailtoLink = `mailto:iruinote@gmail.com?subject=${subject}&body=${body}`;
+        
+        window.location.href = mailtoLink;
+    }
+
+        function encryptAndDisplay(content, key) {
+            const encrypted = CryptoJS.AES.encrypt(content, key).toString();
+            document.getElementById('encryptOutput').value = encrypted;
+            document.getElementById('progress').style.display = 'none'; 
+        }
+    </script>
+</body>
+</html>

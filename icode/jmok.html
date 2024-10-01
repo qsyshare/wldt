@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="qsy">
+    <meta name="source" content="wldt.qsyshare.com">
+    <title>文件解密</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <style>
+      
+        #jmokh1 {
+            background-color: #007aff;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            width: 90%;
+            margin-bottom: 20px;
+        }
+        h2, h3 {
+            color: #333;
+            margin: 10px 0;
+        }
+
+        #fileInput, #textInput, #jmbu {
+            display: block;
+            margin: 10px auto;
+            padding: 10px;
+            width: 80%;
+            max-width: 600px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        #fileInput {
+            padding: 8px;
+        }
+        #textInput {
+            height: 150px;
+            resize: none;
+            border: 2px solid #4caf50;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        button {
+            background-color: #007aff;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            border: none;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #fileDisplayArea {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 600px;
+        }
+        iframe, img {
+            max-width: 100%;
+            max-height: 80vh;
+        }
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            background-color: #f7f7f7;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        #copyButton, #downloadButton {
+            margin: 10px;
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+        #copyButton:hover, #downloadButton:hover {
+            background-color: #0056b3;
+        }
+        footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <h1 id="jmokh1">「 文件解密 」</h1>
+
+    <h2>解密</h2>
+    <input type="file" id="fileInput" accept=".txt">
+    <textarea id="textInput" rows="10" cols="50" placeholder="或者直接粘贴文本进行解密"></textarea>
+    <button id="jmbu" onclick="requestPasswordAndDecrypt()">开始解密</button>
+
+    <h3>解密后的文件内容:</h3>
+    <div id="fileDisplayArea"></div>
+    <button id="copyButton" style="display: none;" onclick="copyToClipboard()">复制内容</button>
+    <button id="downloadButton" style="display: none;" onclick="downloadFile()">下载文件</button>
+
+    <footer>&copy; 2024 文件解密工具 wldt.qsyshare.com</footer>
+
+    <script>
+        let decryptedBlob;
+
+        function requestPasswordAndDecrypt() {
+            const key = prompt('请输入解密密码（可为空）', '') || '';
+
+            const fileInput = document.getElementById('fileInput');
+            const textInput = document.getElementById('textInput').value.trim();
+
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const fileContent = e.target.result;
+                    decrypt(fileContent, key);
+                };
+                reader.readAsText(file, 'utf-8');
+            } else if (textInput) {
+                decrypt(textInput, key);
+            } else {
+                alert('请上传文件或粘贴文本');
+            }
+        }
+
+        function decrypt(input, key) {
+            try {
+                const decrypted = CryptoJS.AES.decrypt(input, key);
+                const decryptedStr = decrypted.toString(CryptoJS.enc.Utf8);
+
+                if (!decryptedStr) {
+                    throw new Error('解密失败，可能是密钥不正确或数据损坏');
+                }
+
+                const decryptedData = JSON.parse(decryptedStr);
+                const { mimeType, base64Content } = decryptedData;
+
+                const decryptedText = atob(base64Content);
+
+                const byteNumbers = new Uint8Array(decryptedText.length);
+                for (let i = 0; i < decryptedText.length; i++) {
+                    byteNumbers[i] = decryptedText.charCodeAt(i);
+                }
+
+                let cleanByteNumbers = byteNumbers;
+                if ((byteNumbers[0] === 0xFF && byteNumbers[1] === 0xFE) || (byteNumbers[0] === 0xFE && byteNumbers[1] === 0xFF)) {
+                    cleanByteNumbers = byteNumbers.slice(2);
+                } else if (byteNumbers[0] === 0xEF && byteNumbers[1] === 0xBB && byteNumbers[2] === 0xBF) {
+                    cleanByteNumbers = byteNumbers.slice(3);
+                }
+
+                const fileDisplayArea = document.getElementById('fileDisplayArea');
+                fileDisplayArea.innerHTML = '';
+
+                decryptedBlob = new Blob([cleanByteNumbers], { type: mimeType });
+                const url = URL.createObjectURL(decryptedBlob);
+
+                if (mimeType.startsWith('image/')) {
+                    const img = document.createElement('img');
+                    img.src = url;
+                    fileDisplayArea.appendChild(img);
+                } else if (mimeType === 'application/pdf') {
+                    const iframe = document.createElement('iframe');
+                    iframe.src = url;
+                    fileDisplayArea.appendChild(iframe);
+                } else if (mimeType === 'text/plain') {
+                    const textContent = new TextDecoder("utf-8").decode(cleanByteNumbers);
+                    const pre = document.createElement('pre');
+                    pre.textContent = textContent;
+                    fileDisplayArea.appendChild(pre);
+
+                    document.getElementById('copyButton').style.display = 'inline-block';
+                } else {
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'decrypted_file';
+                    a.textContent = '下载文件';
+                    fileDisplayArea.appendChild(a);
+                }
+
+                document.getElementById('downloadButton').style.display = 'inline-block';
+                fileDisplayArea.style.display = 'block';
+            } catch (error) {
+                console.error(error);
+                alert('解密失败: ' + error.message);
+            }
+        }
+
+        function copyToClipboard() {
+            const pre = document.querySelector('#fileDisplayArea pre');
+            if (pre) {
+                navigator.clipboard.writeText(pre.textContent).then(() => {
+                    alert('内容已复制到剪贴板');
+                }).catch(err => {
+                    alert('复制失败: ' + err);
+                });
+            } else {
+                alert('没有可复制的内容');
+            }
+        }
+
+        function downloadFile() {
+            if (decryptedBlob) {
+                const downloadUrl = URL.createObjectURL(decryptedBlob);
+                const a = document.createElement('a');
+                a.href = downloadUrl;
+                a.download = 'decrypted_file';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            } else {
+                alert('没有可下载的文件');
+            }
+        }
+    </script>
+</body>
+</html>
