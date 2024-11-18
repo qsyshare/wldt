@@ -96,6 +96,10 @@
             border-radius: 5px;
             z-index: 1;
         }
+
+        .ic{
+            text-decoration: none;
+        }
     </style>
 
      <!-- Cloudflare Web Analytics -->
@@ -119,7 +123,7 @@
     <button class="toggle-button" onclick="toggleSidebar()">Toggle Sidebar</button>
 
     <div class="sidebar" id="sidebar">
-        <div class="sidebar-header"><a href="https://wldt.qsyshare.com/icode/">icode</a></div>
+        <div class="sidebar-header">icode</div>
         <div class="sidebar-menu">
             <ul>
                 <li class="active" onclick="loadContent('jm.html');updateSidebarSelection(this)">加密文件</li>
@@ -136,7 +140,7 @@
     </div>
 
     <div class="content" id="content">
-        <h1>欢迎使用icode</h1>
+        <h1>欢迎使用<a href="https://wldt.qsyshare.com/icode/" class="ic" target="_blank">icode</a></h1>
         <p>请在左侧“侧边栏”内选择.</p>
     </div>
 
