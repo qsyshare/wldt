@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>自定义二维码生成器</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(to bottom, #e0eafc, #cfdef3);
+        }
+        h1 {
+            color: #333;
+        }
+        .container {
+            text-align: center;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 600px;
+        }
+        input, select {
+            margin: 10px 0;
+            padding: 10px;
+            font-size: 1rem;
+            border: 2px solid #007bff;
+            border-radius: 5px;
+            width: 80%;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #qrcode {
+            margin-top: 20px;
+            padding: 15px;
+            display: inline-block;
+            background: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>自定义二维码生成器</h1>
+        <input type="text" id="urlInput" placeholder="输入网址 (例如：https://example.com)">
+        <select id="colorDark">
+            <option value="#000000">黑色</option>
+            <option value="#007bff">蓝色</option>
+            <option value="#28a745">绿色</option>
+            <option value="#ffc107">黄色</option>
+            <option value="#dc3545">红色</option>
+        </select>
+        <select id="colorLight">
+            <option value="#ffffff">白色</option>
+            <option value="#f8f9fa">浅灰色</option>
+            <option value="#e0f7fa">浅蓝色</option>
+            <option value="#ffe8cc">浅橙色</option>
+        </select>
+        <select id="shape">
+            <option value="square">方形</option>
+            <option value="circle">圆形</option>
+        </select>
+        <input type="number" id="size" placeholder="输入大小（像素）" min="100" max="1000" value="256">
+        <button id="generateButton">生成二维码</button>
+        <div id="qrcode"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+    <script>
+        const generateButton = document.getElementById('generateButton');
+        const qrCodeContainer = document.getElementById('qrcode');
+        const urlInput = document.getElementById('urlInput');
+        const colorDarkInput = document.getElementById('colorDark');
+        const colorLightInput = document.getElementById('colorLight');
+        const shapeInput = document.getElementById('shape');
+        const sizeInput = document.getElementById('size');
+
+        generateButton.addEventListener('click', () => {
+            const url = urlInput.value.trim();
+            const colorDark = colorDarkInput.value;
+            const colorLight = colorLightInput.value;
+            const shape = shapeInput.value;
+            const size = parseInt(sizeInput.value, 10);
+
+            // 验证输入的网址
+            if (!url || !isValidURL(url)) {
+                alert('请输入有效的网址！');
+                return;
+            }
+
+            // 清空现有二维码
+            qrCodeContainer.innerHTML = '';
+
+            // 自定义模块形状
+            const qrOptions = {
+                text: url,
+                width: size,
+                height: size,
+                colorDark: colorDark,
+                colorLight: colorLight,
+                correctLevel: QRCode.CorrectLevel.H,
+            };
+
+            if (shape === 'circle') {
+                customQRCode(qrOptions);
+            } else {
+                new QRCode(qrCodeContainer, qrOptions);
+            }
+        });
+
+        // URL 验证函数
+        function isValidURL(string) {
+            try {
+                new URL(string);
+                return true;
+            } catch (_) {
+                return false;
+            }
+        }
+
+        // 自定义圆形模块
+        function customQRCode(options) {
+            const qrCode = new QRCode(qrCodeContainer, options);
+            const modules = qrCode._oDrawing._el.getElementsByTagName('rect');
+            Array.from(modules).forEach((rect) => {
+                const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                const cx = parseFloat(rect.getAttribute('x')) + parseFloat(rect.getAttribute('width')) / 2;
+                const cy = parseFloat(rect.getAttribute('y')) + parseFloat(rect.getAttribute('height')) / 2;
+                const r = parseFloat(rect.getAttribute('width')) / 2;
+                circle.setAttribute('cx', cx);
+                circle.setAttribute('cy', cy);
+                circle.setAttribute('r', r);
+                circle.setAttribute('fill', rect.getAttribute('fill'));
+                rect.parentNode.replaceChild(circle, rect);
+            });
+        }
+    </script>
+</body>
+</html>
