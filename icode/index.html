@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="author" content="qsy">
+    <meta name="source" content="wldt.qsyshare.com">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Safari Sidebar Example</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+            background-color: #f0f0f5;
+            transition: margin-left 0.3s;
+        }
+        .sidebar {
+            width: 16%;
+            background-color: #f8f8fa;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            padding-top: 20px;
+            transition: width 0.3s, transform 0.3s;
+        }
+        .sidebar.hidden {
+            width: 0;
+            overflow: hidden;
+        }
+        .sidebar-header {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            padding: 15px 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        .sidebar-menu {
+            flex-grow: 1;
+            padding: 10px 0;
+            overflow-y: auto;
+        }
+        .sidebar-menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .sidebar-menu li {
+            padding: 15px 20px;
+            font-size: 16px;
+            color: #444;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .sidebar-menu li:hover {
+            background-color: #e1e1e8;
+        }
+
+        .submenu {
+            display: none;
+            padding-left: 20px;
+        }
+        .content {
+            flex-grow: 1;
+            padding: 30px;
+            background-color: #fff;
+            transition: margin-left 0.3s;
+        }
+        .content h1 {
+            font-size: 28px;
+            color: #333;
+        }
+        .content p {
+            font-size: 16px;
+            color: #666;
+            line-height: 1.6;
+        }
+        .toggle-button {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            background-color: #007aff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            z-index: 1;
+        }
+
+        .ic{
+            text-decoration: none;
+        }
+
+        /* Add a small style to iframe to prevent stretching */
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
+
+    <!-- Cloudflare Web Analytics -->
+    <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "4c0a6a67417444aa9f8f8b507aad5f96"}'></script>
+    <!-- End Cloudflare Web Analytics -->
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW62L5RT2K"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-VW62L5RT2K');
+    </script>
+</head>
+<body>
+
+    <button class="toggle-button" onclick="toggleSidebar()">Toggle Sidebar</button>
+
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">icode</div>
+        <div class="sidebar-menu">
+            <ul>
+                <li class="active" onclick="loadContent('jm.html');updateSidebarSelection(this)">加密文件</li>
+                <li class="active" onclick="loadContent('jmok.html');updateSidebarSelection(this)">解密文件</li>
+                <li class="active" onclick="loadContent('base.html');updateSidebarSelection(this)">图片转Base64</li>
+                <li class="active" onclick="loadContent('lzm.html');updateSidebarSelection(this)">网址转二维码</li>
+                <li class="active" onclick="loadContent('mh.html');updateSidebarSelection(this)">网络盲盒</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="content" id="content">
+        <h1>欢迎使用&nbsp;<a href="https://wldt.qsyshare.com/icode/" class="ic" target="_blank">icode</a></h1>
+        
+        <!-- This iframe will display dynamic content -->
+        <iframe id="iframe-content" src="about:blank"></iframe>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const content = document.getElementById('content');
+            sidebar.classList.toggle('hidden');
+            content.style.marginLeft = sidebar.classList.contains('hidden') ? '0' : '0px';
+        }
+
+        function loadContent(page) {
+            // Get the iframe element
+            const iframe = document.getElementById('iframe-content');
+
+            // Set the iframe's src attribute to load the selected page
+            iframe.src = page;
+        }
+
+        function updateSidebarSelection(clickedItem) {
+            // 获取所有 li 元素
+            const menuItems = document.querySelectorAll('.sidebar-menu li');
+
+            // 清除所有 li 的 active 状态
+            menuItems.forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // 将当前点击的 li 设置为 active
+            clickedItem.classList.add('active');
+        }
+    </script>
+
+</body>
+</html>
