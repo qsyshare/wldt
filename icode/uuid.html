@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UUID 生成器</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            background-color: #f9f9f9;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .uuid {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333;
+            word-wrap: break-word;
+            padding: 10px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            display: inline-block;
+            border-radius: 5px;
+        }
+        .copy-button {
+            margin-left: 10px;
+            background-color: #007BFF;
+        }
+        .copy-button:hover {
+            background-color: #0056b3;
+        }
+        .message {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 14px;
+            display: none;
+            z-index: 1000;
+        }
+        .uuid-list {
+            margin-top: 30px;
+            text-align: left;
+            display: inline-block;
+            max-width: 90%;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>UUID 生成器</h1>
+        <button onclick="generateUUID()">生成 UUID</button>
+        <div class="uuid-container">
+            <p id="uuid" class="uuid">点击按钮生成一个 UUID</p>
+            <button class="copy-button" onclick="copyUUID()">复制</button>
+        </div>
+    </div>
+    <div id="message" class="message">UUID 已复制到剪贴板！</div>
+    <div class="uuid-list" id="uuidList">
+        <!-- 这里会显示不重复的 UUID，带有序号 -->
+    </div>
+
+    <script>
+        let uuidCount = 0; // 记录生成的 UUID 数量
+        const uuidSet = new Set(); // 使用 Set 保存唯一 UUID
+
+        // 生成 UUID 的函数
+
+          function generateUUIDv4() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+                const r = (crypto.getRandomValues(new Uint8Array(1))[0] & 15) >> (c === 'x' ? 0 : 1);
+                const v = c === 'x' ? r : (r & 0x3) | 0x8;
+                return v.toString(16);
+            });
+        }
+
+        function generateUUID() {
+            const uuid = generateUUIDv4();
+            document.getElementById('uuid').innerText = uuid;
+        }
+
+
+
+
+        // 复制 UUID 到剪贴板的函数
+        function copyUUID() {
+            const uuid = document.getElementById('uuid').innerText;
+            if (!uuidSet.has(uuid)) {
+                navigator.clipboard.writeText(uuid).then(() => {
+                    uuidSet.add(uuid); // 添加到 Set 防止重复
+                    addUUIDToList(uuid); // 将 UUID 添加到列表
+                    showMessage('UUID 已复制到剪贴板！');
+                }).catch(err => {
+                    console.error('复制失败: ', err);
+                });
+            } else {
+                showMessage('UUID 已存在，无需重复添加！');
+            }
+        }
+
+        // 显示提示消息的函数
+        function showMessage(text) {
+            const message = document.getElementById('message');
+            message.innerText = text;
+            message.style.display = 'block';
+
+            // 2秒后自动关闭提示
+            setTimeout(() => {
+                message.style.display = 'none';
+            }, 2000);
+        }
+
+        // 将 UUID 添加到列表的函数
+        function addUUIDToList(uuid) {
+            uuidCount++; // 增加序号计数
+            const uuidList = document.getElementById('uuidList');
+            const p = document.createElement('p');
+            p.innerText = `${uuidCount}. ${uuid}`; // 添加序号和 UUID
+            uuidList.appendChild(p);
+        }
+    </script>
+</body>
+</html>
