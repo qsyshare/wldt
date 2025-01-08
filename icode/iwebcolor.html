@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Color Palette</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f5f5f5;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 1rem;
+            text-align: center;
+            width: 100%;
+        }
+
+        #saveColorButton {
+        width: 150px;
+        height: 50px;
+        font-size: 18px;
+        }
+
+        .color-controls {
+            margin: 2rem;
+            text-align: center;
+        }
+
+        .main-container {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 2rem;
+            margin-top: 2rem;
+            width: 100%;
+            padding: 0 2rem;
+        }
+
+        .color-display {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .color-list {
+            display: flex;
+            flex-direction: column;
+            margin: 0 2rem;
+        }
+
+        .color-item {
+            width: 50px;
+            height: 50px;
+            margin: 5px;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 1px solid #ccc;
+        }
+
+        .color-preview {
+            width: 150px;
+            height: 150px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+
+        .color-info {
+            margin: 1rem 0;
+            text-align: center;
+        }
+
+        .color-info input {
+            width: 250px;
+            padding: 0.5rem;
+            margin: 0.5rem;
+            font-size: 1rem;
+            text-align: center;
+        }
+
+        .color-picker {
+            margin-top: 2rem;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #fff;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            position: fixed;
+            bottom: 0;
+        }
+
+        .saved-colors {
+            display: flex;
+            flex-direction: column;
+            max-width: 350px;
+            padding: 1rem;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        .saved-colors h3 {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .saved-color-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        .saved-color-preview {
+            width: 30px;
+            height: 30px;
+            border-radius: 4px;
+            margin-right: 1rem;
+        }
+
+        footer {
+            margin-top: 2rem;
+            text-align: center;
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+         #colorInput {
+            width: 60px;
+            height: 60px;
+        }
+        
+    </style>
+    <script>
+        function generateShades(baseColor, lighter = true) {
+            const shades = [];
+            const step = 15;
+            let color = parseInt(baseColor.slice(1), 16);
+
+            for (let i = 0; i < 5; i++) {
+                let r = (color >> 16) & 0xff;
+                let g = (color >> 8) & 0xff;
+                let b = color & 0xff;
+
+                if (lighter) {
+                    r = Math.min(r + step * (i + 1), 255);
+                    g = Math.min(g + step * (i + 1), 255);
+                    b = Math.min(b + step * (i + 1), 255);
+                } else {
+                    r = Math.max(r - step * (i + 1), 0);
+                    g = Math.max(g - step * (i + 1), 0);
+                    b = Math.max(b - step * (i + 1), 0);
+                }
+
+                const newColor = `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, '0')}`;
+                shades.push(newColor);
+            }
+
+            return shades;
+        }
+
+        function hexToRgba(hex) {
+            const bigint = parseInt(hex.slice(1), 16);
+            const r = (bigint >> 16) & 255;
+            const g = (bigint >> 8) & 255;
+            const b = bigint & 255;
+            return `rgba(${r}, ${g}, ${b}, 1)`;
+        }
+
+        function updateColorInfo(color) {
+            const rgbaInput = document.getElementById('rgbaValue');
+            const hexInput = document.getElementById('hexValue');
+
+            rgbaInput.value = hexToRgba(color);
+            hexInput.value = color;
+        }
+
+        function updateColorSelection(color) {
+            const colorPreview = document.getElementById('colorPreview');
+            const lighterColors = document.getElementById('lighterColors');
+            const darkerColors = document.getElementById('darkerColors');
+
+            colorPreview.style.backgroundColor = color;
+            updateColorInfo(color);
+
+            const lighterShades = generateShades(color, true);
+            const darkerShades = generateShades(color, false);
+
+            lighterColors.innerHTML = '';
+            darkerColors.innerHTML = '';
+
+            lighterShades.forEach(shade => {
+                const div = document.createElement('div');
+                div.className = 'color-item';
+                div.style.backgroundColor = shade;
+                div.onclick = () => updateColorSelection(shade);
+                lighterColors.appendChild(div);
+            });
+
+            darkerShades.forEach(shade => {
+                const div = document.createElement('div');
+                div.className = 'color-item';
+                div.style.backgroundColor = shade;
+                div.onclick = () => updateColorSelection(shade);
+                darkerColors.appendChild(div);
+            });
+        }
+
+        function saveColor() {
+            const rgba = document.getElementById('rgbaValue').value;
+            const hex = document.getElementById('hexValue').value;
+            const savedColors = document.getElementById('savedColors');
+
+            const colorItem = document.createElement('div');
+            colorItem.className = 'saved-color-item';
+
+            const colorPreview = document.createElement('div');
+            colorPreview.className = 'saved-color-preview';
+            colorPreview.style.backgroundColor = hex;
+
+            const colorInfo = document.createElement('div');
+            colorInfo.innerText = `${hex} / ${rgba}`;
+
+            const deleteButton = document.createElement('button');
+            deleteButton.innerText = '删除';
+            deleteButton.onclick = () => savedColors.removeChild(colorItem);
+
+            colorItem.appendChild(colorPreview);
+            colorItem.appendChild(colorInfo);
+            colorItem.appendChild(deleteButton);
+
+            savedColors.appendChild(colorItem);
+        }
+
+        function isValidHex(hex) {
+            return /^#([0-9A-Fa-f]{6})$/.test(hex);
+        }
+
+        function isValidRgba(rgba) {
+            return /^rgba\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3}),\s*(0|1|0\.\d+)\)$/.test(rgba);
+        }
+
+        function handleInputChange(event, type) {
+            if (event.key === "Enter") {
+                const value = event.target.value.trim();
+                if (type === "hex" && isValidHex(value)) {
+                    updateColorSelection(value);
+                } else if (type === "rgba" && isValidRgba(value)) {
+                    const [r, g, b] = value.match(/\d+/g).map(Number);
+                    const hex = `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase()}`;
+                    updateColorSelection(hex);
+                } else {
+                    alert(`Invalid ${type.toUpperCase()} value!`);
+                }
+            }
+        }
+
+
+        window.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('saveColorButton').onclick = saveColor;
+            updateColorSelection('#000000');
+        });
+    </script>
+</head>
+<body>
+    <header>
+        <h1>iWeb调色板</h1>
+        <p>可从底层调色板选择颜色，也可修改RGBA或Hex的值后点击回车查看颜色。</p>
+    </header>
+
+ <div class="color-info">
+    <label for="rgbaValue">RGBA:</label>
+    <input type="text" id="rgbaValue" onkeydown="handleInputChange(event, 'rgba')">
+    <label for="hexValue">Hex:</label>
+    <input type="text" id="hexValue" onkeydown="handleInputChange(event, 'hex')">
+    <button id="saveColorButton">保存颜色</button>
+</div>
+    <div class="main-container">
+        <div class="color-display">
+            <div id="lighterColors" class="color-list"></div>
+            <div id="colorPreview" class="color-preview" style="background-color: #000000;"></div>
+            <div id="darkerColors" class="color-list"></div>
+        </div>
+
+        <div class="saved-colors">
+            <h3>临时保存的颜色</h3>
+            <div id="savedColors"></div>
+        </div>
+    </div>
+
+    <div class="color-picker">
+        <input type="color" id="colorInput" value="#000000" onchange="updateColorSelection(this.value)">
+    </div>
+
+    <footer>
+        &copy; 2025 iWeb调色板 wldt.qsyshare.com
+    </footer>
+</body>
+</html>
