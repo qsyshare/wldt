@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced JavaScript Obfuscation Tool</title>
+    <script src="https://cdn.jsdelivr.net/npm/javascript-obfuscator/dist/index.browser.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: #f0f0f0;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 800px;
+            background: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        textarea {
+            width: 100%;
+            height: 150px;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        button {
+            background: #007BFF;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        #copyButton {
+            background: #28a745;
+            margin-top: 10px;
+        }
+
+        #copyButton:hover {
+            background: #218838;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+
+            button {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>JavaScript 代码高级混淆工具</h1>
+        <textarea id="inputCode" placeholder="请将您的 JavaScript 代码粘贴到此处..."></textarea>
+        <button onclick="obfuscateCode()">进行混淆</button>
+        <h3>混淆加密后的代码:</h3>
+        <textarea id="outputCode" readonly placeholder="混淆加密后的代码将在这里显示..."></textarea>
+        <button id="copyButton" onclick="copyToClipboard()">复制到剪贴板</button>
+    </div>
+
+    <script>
+        function obfuscateCode() {
+            const inputCode = document.getElementById('inputCode').value;
+
+            if (!inputCode.trim()) {
+                alert('Please enter some JavaScript code to obfuscate.');
+                return;
+            }
+
+            const obfuscatedCode = JavaScriptObfuscator.obfuscate(inputCode, {
+                compact: true,
+                controlFlowFlattening: true,
+                controlFlowFlatteningThreshold: 1, // Max level of control flow flattening
+                deadCodeInjection: true, // Injects dead code to further obfuscate
+                stringArray: true, // Use string array encoding to obfuscate strings
+                stringArrayThreshold: 0.75, // How many strings to put in the array (75% of the strings)
+                rotateStringArray: true, // Rotate the string array
+                stringArrayEncoding: ['base64'], // Use base64 encoding for strings
+                renameGlobals: true, // Rename global variables and functions
+                disableConsoleOutput: true, // Disable console logs in the obfuscated code
+                selfDefending: true, // Prevent deobfuscation by adding self-defending mechanisms
+                log: false, // Disable the log for the obfuscation process
+                renameProperties: true // Rename object properties
+            }).getObfuscatedCode();
+
+            document.getElementById('outputCode').value = obfuscatedCode;
+        }
+
+        function copyToClipboard() {
+            const outputCode = document.getElementById('outputCode');
+            outputCode.select();
+            outputCode.setSelectionRange(0, 99999); // For mobile devices
+
+            try {
+                document.execCommand('copy');
+                alert('Code copied to clipboard!');
+            } catch (err) {
+                alert('Failed to copy code!');
+            }
+        }
+    </script>
+</body>
+</html>
