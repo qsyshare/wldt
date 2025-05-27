@@ -1,157 +1,231 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>赞助与联络</title>
-    <style>
-        body, html {
-            height: 100%;
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 10px; /* 增加内边距 */
-            box-sizing: border-box; /* 包含内边距在宽度和高度计算中 */
-        }
-        .container {
-            display: flex;
-            flex-direction: column; /* 垂直布局 */
-            width: 100%; /* 100%宽度 */
-            max-width: 800px; /* 最大宽度 */
-            height: auto; /* 高度自适应 */
-            box-shadow: 0 0 30px rgba(0, 123, 255, 0.3);
-            border-radius: 15px;
-            overflow: hidden;
-            margin: auto; /* 居中对齐 */
-        }
-        .left, .right {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            /* width: 90%; 100%宽度 */
-            padding: 20px;
-        }
-        .left {
-            background-color: #f9f9f9;
-        }
-        .right {
-            background-color: white;
-        }
-        img {
-            width: 80%; /* 设置图片宽度为100% */
-            height: auto; /* 高度自适应 */
-            border-radius: 15px;
-            box-shadow: 0 0 30px rgba(0, 123, 255, 0.6);
-            filter: blur(2px);
-            transition: filter 0.3s, box-shadow 0.3s;
-        }
-        img:hover {
-            filter: blur(0);
-            box-shadow: 0 0 40px rgba(0, 123, 255, 0.8);
-        }
-        h1 {
-            font-size: 2em; /* 适应不同屏幕尺寸 */
-            color: #007BFF;
-            margin: 20px 0;
-            text-shadow: 2px 2px 8px rgba(0, 123, 255, 0.7);
-            animation: glow 1.5s infinite alternate;
-        }
-        @keyframes glow {
-            0% {
-                text-shadow: 2px 2px 8px rgba(0, 123, 255, 0.7);
-            }
-            100% {
-                text-shadow: 4px 4px 16px rgba(0, 123, 255, 1);
-            }
-        }
-        p {
-            font-size: 1.2em; /* 调整字体大小 */
-            color: #333;
-            margin: 10px 0;
-            text-align: center;
-            background: linear-gradient(90deg, rgba(0,123,255,1) 0%, rgba(0,213,255,1) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: gradientMove 5s infinite alternate;
-        }
-        @keyframes gradientMove {
-            0% {
-                background-position: 0% 50%;
-            }
-            100% {
-                background-position: 100% 50%;
-            }
-        }
-        a.email-link {
-            text-decoration: none;
-            color: #007BFF;
-            font-weight: bold;
-            font-size: 1.2em;
-            padding: 10px 20px;
-            border: 2px solid #007BFF;
-            border-radius: 5px;
-            transition: background-color 0.3s, color 0.3s;
-            margin-top: 20px;
-        }
-        a.email-link:hover {
-            background-color: #007BFF;
-            color: white;
-        }
-        .click-hint {
-            font-size: 1em;
-            color: #666;
-            margin-top: 10px;
-            text-align: center;
-            font-style: italic;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>赞助与联络</title>
+  <style>
+    :root {
+      --primary-color: #007BFF;
+      --text-color: #333;
+      --highlight-color: rgba(0, 123, 255, 0.6);
+    }
 
-        /* Media queries for responsive design */
-        @media (max-width: 600px) {
-            h1 {
-                font-size: 1.8em; /* 小屏幕上标题的大小 */
-            }
-            p {
-                font-size: 1em; /* 小屏幕上段落的大小 */
-            }
-            a.email-link {
-                font-size: 1em; /* 小屏幕上链接的大小 */
-            }
-            .click-hint {
-                font-size: 0.9em; /* 调整提示字体大小 */
-            }
-        }
-    </style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background-color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: var(--text-color);
+    }
+
+    .main-wrapper {
+      width: 100%;
+      max-width: 900px;
+    }
+
+.platforms {
+  align-items: flex-start; /* 保证每个平台顶部对齐 */
+}
+
+    .platform {
+      text-align: center;
+      flex: 1 1 150px;
+    }
+
+    .platform img {
+      width: 150px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    }
+
+ .platform p {
+  margin-top: 10px;
+  font-size: 0.95em;
+  line-height: 1.5;
+}
+
+    .platform a {
+      font-size: 0.9em;
+      color: var(--primary-color);
+      text-decoration: none;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      background: #fdfdfd;
+      border-radius: 15px;
+      box-shadow: 0 0 30px rgba(0, 123, 255, 0.3);
+      overflow: hidden;
+    }
+
+    .image-section,
+    .text-section {
+      padding: 20px;
+      text-align: center;
+    }
+
+    .image-section {
+      background-color: #f9f9f9;
+    }
+
+    .image-section img {
+      width: 80%;
+      max-width: 400px;
+      border-radius: 15px;
+      box-shadow: 0 0 30px var(--highlight-color);
+      filter: blur(2px);
+      transition: filter 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .image-section img:hover {
+      filter: none;
+      box-shadow: 0 0 40px rgba(0, 123, 255, 0.8);
+    }
+
+    .click-hint {
+      font-size: 1em;
+      color: #666;
+      margin-top: 10px;
+      font-style: italic;
+    }
+
+    h1 {
+      font-size: 2em;
+      color: var(--primary-color);
+      text-shadow: 2px 2px 8px rgba(0, 123, 255, 0.7);
+      animation: glow 1.5s infinite alternate;
+      margin-bottom: 15px;
+    }
+
+    @keyframes glow {
+      0% {
+        text-shadow: 2px 2px 8px rgba(0, 123, 255, 0.7);
+      }
+      100% {
+        text-shadow: 4px 4px 16px rgba(0, 123, 255, 1);
+      }
+    }
+
+    p {
+      font-size: 1.1em;
+      background: linear-gradient(90deg, rgba(0,123,255,1), rgba(0,213,255,1));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradientMove 5s infinite alternate;
+    }
+
+    @keyframes gradientMove {
+      0% {
+        background-position: 0% 50%;
+      }
+      100% {
+        background-position: 100% 50%;
+      }
+    }
+
+    .email-link {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 1.1em;
+      font-weight: bold;
+      color: var(--primary-color);
+      text-decoration: none;
+      border: 2px solid var(--primary-color);
+      border-radius: 5px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .email-link:hover {
+      background-color: var(--primary-color);
+      color: #fff;
+    }
+
+    @media (min-width: 768px) {
+      .container {
+        flex-direction: row;
+      }
+      .image-section,
+      .text-section {
+        flex: 1;
+      }
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 1.6em;
+      }
+      p,
+      .email-link {
+        font-size: 1em;
+      }
+      .click-hint {
+        font-size: 0.9em;
+      }
+    }
+  </style>
 
     <!-- Cloudflare Web Analytics -->
-    <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "4c0a6a67417444aa9f8f8b507aad5f96"}'></script>
-    <!-- End Cloudflare Web Analytics -->
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "4c0a6a67417444aa9f8f8b507aad5f96"}'></script>
+   <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW62L5RT2K"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-VW62L5RT2K');
+  </script>
 
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VW62L5RT2K"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
 
-      gtag('config', 'G-VW62L5RT2K');
-    </script>
-    
 </head>
 <body>
-    <div class="container">
-        <div class="left">
-            <img src="image002.png" alt="二维码图像">
-            <div class="click-hint">请点击图片变清晰</div>
-        </div>
-        <div class="right">
-            <h1>赞助</h1> 
-            <p>为了网站长期稳定运行和持续发展，我们诚挚地邀请您提供支持。您的每一份捐助都将用于网站的维护和改进，感谢您的慷慨解囊。--- <a href="https://wldt.qsyshare.com/" target="_self"><strong>WLDT</strong></a></p>
-            <a href="mailto:aifenxiang19@gmail.com" class="email-link">联络邮箱: aifenxiang19@gmail.com</a>
-        </div>
+  <div class="main-wrapper">
+    <div class="platforms">
+       <a href="https://pd.qq.com/s/4wahaa5os?b=9" target="_blank">
+     <div class="platform">
+    <img src="images/qq.jpg" alt="QQ频道二维码" />
+    <p>
+       <b>QQ频道号：qianshuiyu</b><br />
+      <a href="https://pd.qq.com/s/4wahaa5os?b=9" target="_blank">扫一扫二维码或点击，加入频道</a>
+    </p>
+  </div>
+      </a>
+      <a href="https://weixin.qq.com/r/mp/vhNxaRDEFE1rrVQK90as" target="_blank">
+        <div class="platform">
+    <img src="images/gz.jpg" alt="微信公众号二维码" />
+    <p>
+      <b>微信公众号：wldt.qsyshare.com</b><br />
+      <a href="https://weixin.qq.com/r/mp/vhNxaRDEFE1rrVQK90as" target="_blank">微信扫描二维码，关注公众号</a>
+    </p>
+  </div></a>
     </div>
+
+    <div class="container">
+      <div class="image-section">
+        <img src="image002.png" alt="二维码图像" />
+        <div class="click-hint">请点击图片变清晰</div>
+      </div>
+      <div class="text-section">
+        <h1>赞助</h1>
+        <p>
+          为了网站长期稳定运行和持续发展，我们诚挚地邀请您提供支持。
+          您的每一份捐助都将用于网站的维护和改进，感谢您的慷慨解囊。—
+          <a href="https://wldt.qsyshare.com/" target="_self"><strong>WLDT</strong></a>
+        </p>
+        <a href="mailto:qsyshare@163.com" class="email-link">
+          联络邮箱: qsyshare@163.com
+        </a>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
