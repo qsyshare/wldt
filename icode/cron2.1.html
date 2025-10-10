@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cron 表达式生成器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 10px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 15px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 12px;
+        }
+
+        .content {
+            padding: 15px;
+        }
+
+        @media (min-width: 768px) {
+            body {
+                padding: 20px;
+            }
+            .container {
+                max-width: 700px;
+            }
+            .header {
+                padding: 25px 20px;
+            }
+            .header h1 {
+                font-size: 24px;
+                margin-bottom: 8px;
+            }
+            .header p {
+                font-size: 14px;
+            }
+            .content {
+                padding: 20px;
+            }
+        }
+
+        .section {
+            margin-bottom: 15px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 3px;
+            height: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 2px;
+        }
+
+        @media (min-width: 768px) {
+            .section {
+                margin-bottom: 20px;
+                padding: 15px;
+                border-radius: 10px;
+            }
+            .section-title {
+                font-size: 15px;
+                margin-bottom: 12px;
+            }
+        }
+
+        .form-group {
+            margin-bottom: 10px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            color: #495057;
+            font-weight: 500;
+            font-size: 13px;
+        }
+
+        select, input[type="number"], input[type="text"] {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        @media (min-width: 768px) {
+            .form-group {
+                margin-bottom: 12px;
+            }
+            label {
+                font-size: 14px;
+                margin-bottom: 7px;
+            }
+            select, input[type="number"], input[type="text"] {
+                padding: 9px 13px;
+            }
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .checkbox-item label {
+            margin: 0;
+            cursor: pointer;
+            font-weight: normal;
+        }
+
+        .result-box {
+            background: #f8f9fa;
+            border: 1px solid #667eea;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 15px;
+        }
+
+        .result-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 8px;
+        }
+
+        .cron-expression {
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 15px;
+            color: #667eea;
+            font-weight: bold;
+            text-align: center;
+            word-break: break-all;
+            border: 1px dashed #667eea;
+        }
+
+        .description {
+            margin-top: 10px;
+            padding: 10px;
+            background: white;
+            border-radius: 6px;
+            color: #495057;
+            font-size: 13px;
+        }
+
+        .btn-copy {
+            margin-top: 10px;
+            width: 100%;
+            padding: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        @media (min-width: 768px) {
+            .result-box {
+                padding: 15px;
+                margin-top: 20px;
+                border-radius: 10px;
+            }
+            .result-title {
+                font-size: 15px;
+                margin-bottom: 10px;
+            }
+            .cron-expression {
+                padding: 14px;
+                font-size: 16px;
+            }
+            .description {
+                margin-top: 12px;
+                padding: 12px;
+                font-size: 14px;
+            }
+            .btn-copy {
+                margin-top: 12px;
+                padding: 11px;
+                font-size: 15px;
+            }
+        }
+
+        .btn-copy:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-copy:active {
+            transform: translateY(0);
+        }
+
+        .quick-presets {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .preset-btn {
+            padding: 8px;
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 12px;
+        }
+
+        @media (min-width: 480px) {
+            .quick-presets {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (min-width: 768px) {
+            .quick-presets {
+                gap: 10px;
+            }
+            .preset-btn {
+                padding: 10px;
+                font-size: 13px;
+            }
+            .footer {
+                font-size: 13px;
+                padding: 20px 15px;
+            }
+        }
+
+        .preset-btn:hover {
+            border-color: #667eea;
+            background: #f8f9fa;
+            transform: translateY(-2px);
+        }
+
+        .help-text {
+            font-size: 12px;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+        .footer {
+            text-align: center;
+            padding: 15px 10px;
+            margin-top: 20px;
+            color: rgba(255, 255, 255, 0.8); /* 配合背景渐变，使用浅色字体 */
+            font-size: 12px;
+        }
+
+        .footer p {
+            margin-bottom: 5px;
+        }
+        /* 新增页尾链接样式 */
+        .footer a.footer-link {
+            /* 继承页脚的文本颜色，使其看起来像普通文本 */
+            color: inherit; 
+            /* 移除链接默认的下划线 */
+            text-decoration: none;
+            /* 添加悬停效果，让用户知道这是可点击的 */
+            transition: color 0.3s;
+        }
+
+        .footer a.footer-link:hover {
+            /* 鼠标悬停时，颜色变亮一点，或者添加下划线 */
+            color: #ffffff; 
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🕐 Cron 表达式生成器</h1>
+            <p>轻松创建和管理定时任务表达式</p>
+        </div>
+
+        <div class="content">
+            <div class="section">
+                <div class="section-title">时间转换助手 (Timezone Helper)</div>
+                <p class="help-text" style="margin-bottom: 10px;">输入本地时间，将自动转换为服务器的UTC时间并填充到下方“小时”设置中。</p>
+                <div class="form-group">
+                    <label>选择您的时区</label>
+                    <select id="timezoneSelect">
+                        <option value="-12">UTC-12</option>
+                        <option value="-11">UTC-11</option>
+                        <option value="-10">UTC-10 (夏威夷)</option>
+                        <option value="-9">UTC-9 (阿拉斯加)</option>
+                        <option value="-8">UTC-8 (太平洋时间)</option>
+                        <option value="-7">UTC-7 (山区时间)</option>
+                        <option value="-6">UTC-6 (中部时间)</option>
+                        <option value="-5">UTC-5 (东部时间)</option>
+                        <option value="-4">UTC-4 (大西洋时间)</option>
+                        <option value="-3">UTC-3 (巴西)</option>
+                        <option value="0">UTC+0 (伦敦)</option>
+                        <option value="1">UTC+1 (柏林)</option>
+                        <option value="2">UTC+2 (雅典)</option>
+                        <option value="3">UTC+3 (莫斯科)</option>
+                        <option value="5.5">UTC+5:30 (印度)</option>
+                        <option value="7">UTC+7 (曼谷)</option>
+                        <option value="8" selected>北京时间 (UTC+8)</option>
+                        <option value="9">UTC+9 (东京)</option>
+                        <option value="10">UTC+10 (悉尼)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>本地开始小时 (0-23)</label>
+                    <input type="number" id="localStartHour" min="0" max="23" placeholder="例如: 8">
+                </div>
+                <div class="form-group">
+                    <label>本地结束小时 (可选, 0-23)</label>
+                    <input type="number" id="localEndHour" min="0" max="23" placeholder="例如: 9">
+                </div>
+                <div style="margin-top: 10px;">
+                     <button class="preset-btn" style="width: 100%; padding: 10px;" onclick="convertAndApplyTime()">转换并应用到“小时”字段</button>
+                </div>
+                <p class="help-text" id="conversionResult" style="margin-top: 8px; text-align: center; font-weight: bold;"></p>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">快速预设</div>
+                <div class="quick-presets">
+                    <button class="preset-btn" onclick="setPreset('* * * * *')">每分钟</button>
+                    <button class="preset-btn" onclick="setPreset('0 * * * *')">每小时</button>
+                    <button class="preset-btn" onclick="setPreset('0 0 * * *')">每天凌晨</button>
+                    <button class="preset-btn" onclick="setPreset('0 9 * * *')">每天9点</button>
+                    <button class="preset-btn" onclick="setPreset('0 0 * * 0')">每周日凌晨</button>
+                    <button class="preset-btn" onclick="setPreset('0 0 1 * *')">每月1号</button>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">分钟 (0-59)</div>
+                <div class="form-group">
+                    <label>执行方式</label>
+                    <select id="minuteType" onchange="handleTypeChange()">
+                        <option value="*">每分钟</option>
+                        <option value="specific">指定分钟</option>
+                        <option value="interval">每隔N分钟</option>
+                        <option value="range">范围</option>
+                    </select>
+                </div>
+                <div id="minuteOptions"></div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">小时 (0-23)</div>
+                <div class="form-group">
+                    <label>执行方式</label>
+                    <select id="hourType" onchange="handleTypeChange()">
+                        <option value="*">每小时</option>
+                        <option value="specific">指定小时</option>
+                        <option value="interval">每隔N小时</option>
+                        <option value="range">范围</option>
+                    </select>
+                </div>
+                <div id="hourOptions"></div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">日期 (1-31)</div>
+                <div class="form-group">
+                    <label>执行方式</label>
+                    <select id="dayType" onchange="handleTypeChange()">
+                        <option value="*">每天</option>
+                        <option value="specific">指定日期</option>
+                        <option value="interval">每隔N天</option>
+                        <option value="?">不指定</option>
+                    </select>
+                </div>
+                <div id="dayOptions"></div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">月份 (1-12)</div>
+                <div class="form-group">
+                    <label>执行方式</label>
+                    <select id="monthType" onchange="handleTypeChange()">
+                        <option value="*">每月</option>
+                        <option value="specific">指定月份</option>
+                    </select>
+                </div>
+                <div id="monthOptions"></div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">星期 (0-6, 0=周日)</div>
+                <div class="form-group">
+                    <label>执行方式</label>
+                    <select id="weekType" onchange="handleTypeChange()">
+                        <option value="*">每天</option>
+                        <option value="specific">指定星期</option>
+                        <option value="?">不指定</option>
+                    </select>
+                </div>
+                <div id="weekOptions"></div>
+            </div>
+
+            <div class="result-box">
+                <div class="result-title">生成的 Cron 表达式</div>
+                <div class="cron-expression" id="cronResult">* * * * *</div>
+                <div class="description" id="cronDescription">每分钟执行一次</div>
+                <button class="btn-copy" onclick="copyCron()">📋 复制表达式</button>
+            </div>
+        </div>
+    </div>
+    <footer class="footer">
+        <p>&copy; <span id="currentYear">2024</span> <a href="https://qsyshare.com" target="_blank" class="footer-link">qsyshare.com</a>. All Rights Reserved.</p>
+     
+    </footer>
+
+   <script>
+    let cronParts = ['*', '*', '*', '*', '*'];
+
+    function updateCron() {
+        // 分钟
+        const minuteType = document.getElementById('minuteType').value;
+        cronParts[0] = getFieldValue('minute', minuteType);
+
+        // 小时
+        const hourType = document.getElementById('hourType').value;
+        cronParts[1] = getFieldValue('hour', hourType);
+
+        // 日期
+        const dayType = document.getElementById('dayType').value;
+        cronParts[2] = getFieldValue('day', dayType);
+
+        // 月份
+        const monthType = document.getElementById('monthType').value;
+        cronParts[3] = getFieldValue('month', monthType);
+
+        // 星期
+        const weekType = document.getElementById('weekType').value;
+        cronParts[4] = getFieldValue('week', weekType);
+
+        displayCron();
+    }
+    
+    function handleTypeChange() {
+        // 在切换类型前，先记录当前所有输入框的值
+        const currentValues = {};
+        ['minute', 'hour', 'day', 'month', 'week'].forEach(field => {
+            currentValues[`${field}Specific`] = document.getElementById(`${field}Specific`)?.value;
+            currentValues[`${field}Interval`] = document.getElementById(`${field}Interval`)?.value;
+            currentValues[`${field}RangeStart`] = document.getElementById(`${field}RangeStart`)?.value;
+            currentValues[`${field}RangeEnd`] = document.getElementById(`${field}RangeEnd`)?.value;
+            currentValues[`${field}Select`] = document.getElementById(`${field}Select`)?.value; // For specific selects
+        });
+
+        updateOptions(currentValues);
+        updateCron();
+    }
+
+    function getFieldValue(field, type) {
+        if (type === '*' || type === '?') return type;
+        
+        if (type === 'specific') {
+            const value = document.getElementById(`${field}Specific`)?.value;
+            return value || '*';
+        }
+        
+        if (type === 'interval') {
+            const value = document.getElementById(`${field}Interval`)?.value || '1';
+            return `*/${value}`;
+        }
+        
+        if (type === 'range') {
+            const start = document.getElementById(`${field}RangeStart`)?.value || '0';
+            const end = document.getElementById(`${field}RangeEnd`)?.value || '0';
+            return `${start}-${end}`;
+        }
+        
+        return '*';
+    }
+
+    // 接受一个可选的 currentValues 参数，用于在重新渲染时恢复值
+    function updateOptions(currentValues = {}) {
+        updateMinuteOptions(currentValues);
+        updateHourOptions(currentValues);
+        updateDayOptions(currentValues);
+        updateMonthOptions(currentValues);
+        updateWeekOptions(currentValues);
+    }
+
+    function updateMinuteOptions(currentValues) {
+        const type = document.getElementById('minuteType').value;
+        const container = document.getElementById('minuteOptions');
+        
+        // 尝试获取当前值，如果不存在则使用默认值
+        const specificValue = currentValues.minuteSpecific || '0';
+        const intervalValue = currentValues.minuteInterval || '1';
+        const rangeStartValue = currentValues.minuteRangeStart || '0';
+        const rangeEndValue = currentValues.minuteRangeEnd || '59';
+
+        if (type === 'specific') {
+            container.innerHTML = `<div class="form-group"><label>选择分钟</label><input type="number" id="minuteSpecific" min="0" max="59" value="${specificValue}" onchange="updateCron()"><p class="help-text">输入 0-59 之间的值</p></div>`;
+        } else if (type === 'interval') {
+            container.innerHTML = `<div class="form-group"><label>间隔分钟数</label><input type="number" id="minuteInterval" min="1" max="59" value="${intervalValue}" onchange="updateCron()"><p class="help-text">例如：5 表示每5分钟执行一次</p></div>`;
+        } else if (type === 'range') {
+            container.innerHTML = `<div class="form-group"><label>开始分钟</label><input type="number" id="minuteRangeStart" min="0" max="59" value="${rangeStartValue}" onchange="updateCron()"></div><div class="form-group"><label>结束分钟</label><input type="number" id="minuteRangeEnd" min="0" max="59" value="${rangeEndValue}" onchange="updateCron()"></div>`;
+        } else {
+            container.innerHTML = '';
+        }
+    }
+
+    function updateHourOptions(currentValues) {
+        const type = document.getElementById('hourType').value;
+        const container = document.getElementById('hourOptions');
+        
+        const specificValue = currentValues.hourSpecific || '0';
+        const intervalValue = currentValues.hourInterval || '1';
+        const rangeStartValue = currentValues.hourRangeStart || '0';
+        const rangeEndValue = currentValues.hourRangeEnd || '23';
+
+        if (type === 'specific') {
+            container.innerHTML = `<div class="form-group"><label>选择小时</label><input type="number" id="hourSpecific" min="0" max="23" value="${specificValue}" onchange="updateCron()"><p class="help-text">输入 0-23 之间的值</p></div>`;
+        } else if (type === 'interval') {
+            container.innerHTML = `<div class="form-group"><label>间隔小时数</label><input type="number" id="hourInterval" min="1" max="23" value="${intervalValue}" onchange="updateCron()"><p class="help-text">例如：2 表示每2小时执行一次</p></div>`;
+        } else if (type === 'range') {
+            container.innerHTML = `<div class="form-group"><label>开始小时</label><input type="number" id="hourRangeStart" min="0" max="23" value="${rangeStartValue}" onchange="updateCron()"></div><div class="form-group"><label>结束小时</label><input type="number" id="hourRangeEnd" min="0" max="23" value="${rangeEndValue}" onchange="updateCron()"></div>`;
+        } else {
+            container.innerHTML = '';
+        }
+    }
+
+    function updateDayOptions(currentValues) {
+        const type = document.getElementById('dayType').value;
+        const container = document.getElementById('dayOptions');
+
+        const specificValue = currentValues.daySpecific || '1';
+        const intervalValue = currentValues.dayInterval || '1';
+        
+        if (type === 'specific') {
+            container.innerHTML = `<div class="form-group"><label>选择日期</label><input type="number" id="daySpecific" min="1" max="31" value="${specificValue}" onchange="updateCron()"><p class="help-text">输入 1-31 之间的值</p></div>`;
+        } else if (type === 'interval') {
+            container.innerHTML = `<div class="form-group"><label>间隔天数</label><input type="number" id="dayInterval" min="1" max="31" value="${intervalValue}" onchange="updateCron()"><p class="help-text">例如：5 表示每5天执行一次</p></div>`;
+        } else {
+            container.innerHTML = '';
+        }
+    }
+
+    function updateMonthOptions(currentValues) {
+        const type = document.getElementById('monthType').value;
+        const container = document.getElementById('monthOptions');
+        
+        const specificValue = currentValues.monthSpecific || '1';
+
+        if (type === 'specific') {
+            container.innerHTML = `<div class="form-group"><label>选择月份</label><input type="number" id="monthSpecific" min="1" max="12" value="${specificValue}" onchange="updateCron()"><p class="help-text">输入 1-12 之间的值</p></div>`;
+        } else {
+            container.innerHTML = '';
+        }
+    }
+
+    function updateWeekOptions(currentValues) {
+        const type = document.getElementById('weekType').value;
+        const container = document.getElementById('weekOptions');
+        
+        // 星期下拉框的值比较特殊，默认为 '0' (周日)
+        const specificValue = currentValues.weekSpecific || '0';
+        const options = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
+            .map((name, index) => 
+                `<option value="${index}" ${index.toString() === specificValue ? 'selected' : ''}>${name}</option>`
+            ).join('');
+        
+        if (type === 'specific') {
+            container.innerHTML = `<div class="form-group"><label>选择星期</label><select id="weekSpecific" onchange="updateCron()">${options}</select></div>`;
+        } else {
+            container.innerHTML = '';
+        }
+    }
+
+    function displayCron() {
+        const cronExpr = cronParts.join(' ');
+        document.getElementById('cronResult').textContent = cronExpr;
+        document.getElementById('cronDescription').textContent = describeCron(cronParts);
+    }
+
+    function describeCron(parts) {
+        let desc = '';
+        
+        if (parts[0] === '*') desc += '每分钟';
+        else if (parts[0].includes('/')) desc += `每${parts[0].split('/')[1]}分钟`;
+        else if (parts[0].includes('-')) desc += `从第${parts[0].split('-')[0]}到${parts[0].split('-')[1]}分钟`;
+        else desc += `在第${parts[0]}分钟`;
+        
+        if (parts[1] === '*') desc += ' ';
+        else if (parts[1].includes('/')) desc += ` 每${parts[1].split('/')[1]}小时`;
+        else if (parts[1].includes('-')) desc += ` ${parts[1].split('-')[0]}到${parts[1].split('-')[1]}时`;
+        else desc += ` ${parts[1]}时`;
+        
+        if (parts[2] === '*') desc += ' 每天';
+        else if (parts[2] === '?') desc += '';
+        else if (parts[2].includes('/')) desc += ` 每${parts[2].split('/')[1]}天`;
+        else desc += ` ${parts[2]}日`;
+        
+        if (parts[3] !== '*') {
+            desc += ` ${parts[3]}月`;
+        }
+        
+        if (parts[4] !== '*' && parts[4] !== '?') {
+            const weekNames = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+            desc += ` ${weekNames[parseInt(parts[4])]}`;
+        }
+        
+        return desc.trim() + ' 执行';
+    }
+
+    function copyCron() {
+        const cronText = document.getElementById('cronResult').textContent;
+        navigator.clipboard.writeText(cronText).then(() => {
+            const btn = document.querySelector('.btn-copy');
+            const originalText = btn.textContent;
+            btn.textContent = '✅ 已复制！';
+            setTimeout(() => {
+                btn.textContent = originalText;
+            }, 2000);
+        });
+    }
+
+    function setPreset(expr) {
+        const parts = expr.split(' ');
+        cronParts = parts;
+        
+        // 记录预设表达式中每个字段的值
+        const presetValues = {
+            minuteSpecific: parts[0] !== '*' && !parts[0].includes('/') && !parts[0].includes('-') ? parts[0] : undefined,
+            hourSpecific: parts[1] !== '*' && !parts[1].includes('/') && !parts[1].includes('-') ? parts[1] : undefined,
+            daySpecific: parts[2] !== '*' && parts[2] !== '?' && !parts[2].includes('/') ? parts[2] : undefined,
+            monthSpecific: parts[3] !== '*' ? parts[3] : undefined,
+            weekSpecific: parts[4] !== '*' && parts[4] !== '?' ? parts[4] : undefined
+        };
+
+        // 设置类型
+        document.getElementById('minuteType').value = parts[0].includes('/') ? 'interval' : (parts[0].includes('-') ? 'range' : (parts[0] === '*' ? '*' : 'specific'));
+        document.getElementById('hourType').value = parts[1].includes('/') ? 'interval' : (parts[1].includes('-') ? 'range' : (parts[1] === '*' ? '*' : 'specific'));
+        document.getElementById('dayType').value = parts[2] === '*' ? '*' : (parts[2] === '?' ? '?' : (parts[2].includes('/') ? 'interval' : 'specific'));
+        document.getElementById('monthType').value = parts[3] === '*' ? '*' : 'specific';
+        document.getElementById('weekType').value = parts[4] === '*' ? '*' : (parts[4] === '?' ? '?' : 'specific');
+        
+        // 调用 updateOptions 并传入预设值，这样在DOM更新时就会使用预设值
+        updateOptions(presetValues);
+        
+        // 由于 updateOptions 已经应用了值，我们只需要更新最终表达式即可
+        updateCron();
+    }
+
+    // 新增的时间转换函数
+    function convertAndApplyTime() {
+        const timezoneOffset = parseFloat(document.getElementById('timezoneSelect').value);
+        const localStartHourEl = document.getElementById('localStartHour');
+        const localEndHourEl = document.getElementById('localEndHour');
+        const resultEl = document.getElementById('conversionResult');
+
+        if (localStartHourEl.value === '') {
+            resultEl.textContent = '请输入本地开始小时。';
+            resultEl.style.color = '#dc3545'; // 红色用于提示错误
+            return;
+        }
+
+        const localStartHour = parseInt(localStartHourEl.value, 10);
+        const utcStartHour = (localStartHour - timezoneOffset + 24) % 24;
+
+        const currentValues = {}; // 临时存储要填充的值
+        
+        // 情况一: 只输入了开始小时 (设置为 "指定小时")
+        if (localEndHourEl.value === '') {
+            document.getElementById('hourType').value = 'specific';
+            currentValues.hourSpecific = Math.floor(utcStartHour).toString();
+            
+            resultEl.textContent = `本地时间 ${localStartHour}:00 对应 UTC ${currentValues.hourSpecific}:00。已自动填充。`;
+            resultEl.style.color = '#495057';
+
+        } 
+        // 情况二: 同时输入了开始和结束小时 (设置为 "范围")
+        else {
+            const localEndHour = parseInt(localEndHourEl.value, 10);
+            const utcEndHour = (localEndHour - timezoneOffset + 24) % 24;
+            
+            document.getElementById('hourType').value = 'range';
+            currentValues.hourRangeStart = Math.floor(utcStartHour).toString();
+            currentValues.hourRangeEnd = Math.floor(utcEndHour).toString();
+
+            resultEl.textContent = `本地时间 ${localStartHour}:00-${localEndHour}:00 对应 UTC ${currentValues.hourRangeStart}:00-${currentValues.hourRangeEnd}:00。已自动填充。`;
+            resultEl.style.color = '#495057';
+        }
+        
+        // 核心修改: 调用 updateOptions 并传入新的值，这样可以同时更新 DOM 和保持其他字段的当前值
+        updateOptions(currentValues);
+        updateCron();
+    }
+    document.getElementById('currentYear').textContent = new Date().getFullYear();
+    // 初始化：确保在页面加载时调用 handleTypeChange 以正确渲染选项
+    updateOptions(); 
+    updateCron();
+</script>
+</body>
+</html>
